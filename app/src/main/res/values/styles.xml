@@ -8,4 +8,18 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ListTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorListPrimary</item>
+        <item name="colorPrimaryDark">@color/colorListPrimaryDark</item>
+        <item name="colorAccent">@color/colorListAccent</item>
+    </style>
+
+    <style name="EditTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorEditPrimary</item>
+        <item name="colorPrimaryDark">@color/colorEditPrimaryDark</item>
+        <item name="colorAccent">@color/colorEditAccent</item>
+    </style>
+
 </resources>

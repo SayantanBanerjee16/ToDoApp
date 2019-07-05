@@ -9,7 +9,8 @@
         android:roundIcon="@drawable/todolist"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ListActivity"></activity>
+        <activity android:name=".ListActivity"
+            android:theme="@style/ListTheme"></activity>
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>

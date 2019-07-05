@@ -9,12 +9,17 @@
         android:roundIcon="@drawable/todolist"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ListActivity"
-            android:theme="@style/ListTheme"></activity>
-        <activity android:name=".MainActivity"
+        <activity android:name=".EditActivity"
+            android:theme="@style/EditTheme"></activity>
+        <activity
+            android:name=".ListActivity"
+            android:theme="@style/ListTheme" />
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

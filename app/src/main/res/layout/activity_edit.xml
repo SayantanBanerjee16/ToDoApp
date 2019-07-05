@@ -1,9 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditActivity">
+    android:orientation="vertical"
+    >
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <TextView
+        android:id="@+id/title_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:text="HEADING"
+        android:textSize="35sp"
+        android:textAllCaps="true"
+        android:textColor="#0027FF"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:textAppearance="?android:textAppearanceMedium"/>
+
+    <EditText
+        android:id="@+id/heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:hint="Give a Short Title"
+        android:paddingTop="25dp"
+        android:maxLines="2"
+        android:textSize="25sp"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="#0055FF"
+        android:textColorHint="#AB75C7"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:paddingTop="5dp">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="SET DATE"
+            android:id="@+id/date"
+            android:textColor="#090808"
+            android:background="#1ECBE4"
+            android:layout_margin="5dp"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="SET TIME"
+            android:id="@+id/time"
+            android:textSize="20sp"
+            android:textColor="#090808"
+            android:background="#1ECBE4"
+            android:layout_margin="5dp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/title_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:text="MESSAGE"
+        android:textAllCaps="true"
+        android:textColor="#0027FF"
+        android:textStyle="bold"
+        android:textSize="35sp"
+        android:paddingTop="10dp"
+        android:layout_gravity="center"
+        android:textAppearance="?android:textAppearanceMedium"/>
+
+    <EditText
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:hint="Give a Brief Message ( about 50 words ) "
+        android:maxLines="10"
+        android:paddingTop="15dp"
+        android:textSize="17sp"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="#0055FF"
+        android:textColorHint="#AB75C7"/>
+
+
+
+</LinearLayout>

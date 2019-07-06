@@ -9,9 +9,10 @@
         android:roundIcon="@drawable/todolist"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EditActivity"
-            android:theme="@style/EditTheme"
-            android:parentActivityName=".ListActivity">
+        <activity
+            android:name=".EditActivity"
+            android:parentActivityName=".ListActivity"
+            android:theme="@style/EditTheme">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -30,6 +31,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name=".data.ToDoProvider"
+            android:authorities="com.example.android.todo"
+            android:exported="false" />
     </application>
 
 </manifest>

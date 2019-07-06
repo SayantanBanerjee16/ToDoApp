@@ -25,6 +25,9 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
 
     Button time;
     Button date;
+
+    String time_string;
+    String date_string;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
     public void setDateDialog(View view){
@@ -60,7 +63,8 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month+=1;
-                date.setText(Integer.toString(day) + " / " + Integer.toString(month) + " / " + Integer.toString(year));
+                date_string = day + " / " + month + " / " + year;
+                date.setText(date_string);
             }
         };
     }
@@ -94,21 +98,22 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
 
         if (DateFormat.is24HourFormat(EditActivity.this)) {
-            time.setText(Integer.toString(hour) + " : " + Integer.toString(minute));
+            time_string= hour + " : " + minute;
         } else {
             if (hour == 0) {
-                time.setText(Integer.toString(12) + " : " + Integer.toString(minute) + " AM");
+                time_string = "12 : " + minute + " AM";
             } else if (hour < 12 && hour > 0) {
-                time.setText(Integer.toString(hour) + " : " + Integer.toString(minute) + " AM");
+                time_string = hour + " : " + minute + " AM";
             } else if (hour == 12)
             {
-                time.setText(Integer.toString(hour) + " : " + Integer.toString(minute) + " PM");
+                time_string = hour + " : " + minute + " PM";
             }
             else
             {
-                time.setText(Integer.toString(hour - 12) + " : " + Integer.toString(minute) + " PM");
+                time_string = (hour-12) + " : " + minute + " PM";
             }
         }
+        time.setText(time_string);
 
     }
 }

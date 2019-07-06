@@ -2,11 +2,22 @@ package com.sayantanbanerjee.todolist.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 
 public class ToDoProvider extends ContentProvider {
     private ToDoDbHelper mDbHelper;
+
+    //Add Uri Matcher
+    private static final int TODO = 100;
+    private static final int TODO_ID = 101;
+    private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+    static {
+        sUriMatcher.addURI(ToDoContract.CONTENT_AUTHORITY,ToDoContract.PATH_TODO,TODO);
+        sUriMatcher.addURI(ToDoContract.CONTENT_AUTHORITY,ToDoContract.PATH_TODO + "/#",TODO_ID);
+    }
+
 
     @Override
     public boolean onCreate() {

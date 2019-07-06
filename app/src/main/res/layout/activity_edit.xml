@@ -16,7 +16,7 @@
         android:text="HEADING"
         android:textSize="35sp"
         android:textAllCaps="true"
-        android:textColor="#0027FF"
+        android:textColor="@color/colorHeading"
         android:textStyle="bold"
         android:layout_gravity="center"
         android:textAppearance="?android:textAppearanceMedium"/>
@@ -31,8 +31,8 @@
         android:maxLines="2"
         android:textSize="25sp"
         android:textAppearance="?android:textAppearanceSmall"
-        android:textColor="#0055FF"
-        android:textColorHint="#AB75C7"/>
+        android:textColor="@color/colorContent"
+        android:textColorHint="@color/colorHint"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -45,8 +45,8 @@
             android:layout_weight="1"
             android:text="SET DATE"
             android:id="@+id/date"
-            android:textColor="#090808"
-            android:background="#1ECBE4"
+            android:textColor="@color/colorDateTimeFont"
+            android:background="@color/colorDateTimeBackground"
             android:layout_margin="5dp"
             android:textSize="20sp"
             android:textStyle="bold"/>
@@ -57,8 +57,8 @@
             android:text="SET TIME"
             android:id="@+id/time"
             android:textSize="20sp"
-            android:textColor="#090808"
-            android:background="#1ECBE4"
+            android:textColor="@color/colorDateTimeFont"
+            android:background="@color/colorDateTimeBackground"
             android:layout_margin="5dp"
             android:textStyle="bold"/>
 
@@ -71,7 +71,7 @@
         android:fontFamily="sans-serif-medium"
         android:text="MESSAGE"
         android:textAllCaps="true"
-        android:textColor="#0027FF"
+        android:textColor="@color/colorHeading"
         android:textStyle="bold"
         android:textSize="35sp"
         android:paddingTop="10dp"
@@ -85,11 +85,11 @@
         android:fontFamily="sans-serif"
         android:hint="Give a Brief Message ( about 50 words ) "
         android:maxLines="10"
-        android:paddingTop="15dp"
+        android:paddingTop="25dp"
         android:textSize="17sp"
         android:textAppearance="?android:textAppearanceSmall"
-        android:textColor="#0055FF"
-        android:textColorHint="#AB75C7"/>
+        android:textColor="@color/colorContent"
+        android:textColorHint="@color/colorHint"/>
 
 
 

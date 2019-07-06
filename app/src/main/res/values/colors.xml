@@ -11,4 +11,11 @@
     <color name="colorEditPrimary">#0F4ABE</color>
     <color name="colorEditPrimaryDark">#0024FF</color>
     <color name="colorEditAccent">#959ECF</color>
+
+    <color name="colorHeading">#0027FF</color>
+    <color name="colorContent">#0055FF</color>
+    <color name="colorHint">#AB75C7</color>
+
+    <color name="colorDateTimeBackground">#1ECBE4</color>
+    <color name="colorDateTimeFont">#090808</color>
 </resources>

@@ -10,7 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".EditActivity"
-            android:theme="@style/EditTheme"></activity>
+            android:theme="@style/EditTheme"
+            android:parentActivityName=".ListActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ListActivity" />
+        </activity>
         <activity
             android:name=".ListActivity"
             android:theme="@style/ListTheme" />

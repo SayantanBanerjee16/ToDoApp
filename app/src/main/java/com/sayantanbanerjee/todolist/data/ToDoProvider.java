@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
+import com.sayantanbanerjee.todolist.data.ToDoContract.ToDoEntry;
 
 public class ToDoProvider extends ContentProvider {
     private ToDoDbHelper mDbHelper;
@@ -32,7 +33,18 @@ public class ToDoProvider extends ContentProvider {
 
     @Override
     public String getType(Uri uri) {
-        return null;
+
+        final int match = sUriMatcher.match(uri);
+        switch (match){
+            case TODO:
+                return ToDoEntry.CONTENT_LIST_TYPE;
+
+            case TODO_ID:
+                return ToDoEntry.CONTENT_ITEM_TYPE;
+
+            default:
+                throw new IllegalStateException("Unknown URI" + uri + " with match" + match);
+        }
     }
 
     @Override

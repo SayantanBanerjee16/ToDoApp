@@ -1,5 +1,6 @@
 package com.sayantanbanerjee.todolist.data;
 
+import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -15,6 +16,18 @@ public final class ToDoContract {
 
 
     public static final class ToDoEntry implements BaseColumns{
+
+        /**
+         * The MIME type of the {@link #CONTENT_URI} for a list of Todo_
+         */
+        public static final String CONTENT_LIST_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TODO;
+
+        /**
+         * The MIME type of the {@link #CONTENT_URI} for a single Todo_
+         */
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TODO;
 
        // Uri to access the provider
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI,PATH_TODO);

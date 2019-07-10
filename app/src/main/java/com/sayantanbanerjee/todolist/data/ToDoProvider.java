@@ -1,10 +1,14 @@
 package com.sayantanbanerjee.todolist.data;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.util.Log;
+
 import com.sayantanbanerjee.todolist.data.ToDoContract.ToDoEntry;
 
 public class ToDoProvider extends ContentProvider {
@@ -48,8 +52,25 @@ public class ToDoProvider extends ContentProvider {
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues contentValues) {
-        return null;
+    public Uri insert(Uri uri, ContentValues values) {
+        final int match = sUriMatcher.match(uri);
+
+        switch (match){
+            case TODO:
+
+                SQLiteDatabase db = mDbHelper.getWritableDatabase();
+                long id = db.insert(ToDoEntry.TABLE_NAME,null,values);
+
+                if(id == -1){
+                    Log.i("Error: "," Insertion failed");
+                    return null;
+                }else{
+                    getContext().getContentResolver().notifyChange(uri,null);
+                    return ContentUris.withAppendedId(uri,id);
+                }
+                default:
+                    throw new IllegalArgumentException("Insertion Failed!");
+        }
     }
 
     @Override

@@ -100,8 +100,6 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
                 date.setText(date_string);
             }
         };
-
-
     }
 
     @Override
@@ -124,6 +122,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
                     //exit activity
                     finish();
                 }
+
                 return true;
 
             case R.id.delete:

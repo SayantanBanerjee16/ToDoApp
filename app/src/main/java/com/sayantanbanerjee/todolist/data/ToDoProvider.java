@@ -8,8 +8,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
+import android.content.Context;
+
 
 import com.sayantanbanerjee.todolist.data.ToDoContract.ToDoEntry;
+
+import java.util.Objects;
 
 public class ToDoProvider extends ContentProvider {
     private ToDoDbHelper mDbHelper;
@@ -31,8 +35,28 @@ public class ToDoProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] strings, String s, String[] strings1, String s1) {
-        return null;
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String s1) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor cursor;
+
+        int match = sUriMatcher.match(uri);
+
+        switch(match){
+            case TODO:
+                cursor = db.query(ToDoEntry.TABLE_NAME,projection,selection,selectionArgs,null,null,s1);
+                break;
+
+            case TODO_ID:
+                selection = ToDoEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                cursor = db.query(ToDoEntry.TABLE_NAME,projection,selection,selectionArgs,null,null,s1);
+                break;
+
+            default:
+                throw new IllegalArgumentException(uri + "INVALID");
+        }
+        cursor.setNotificationUri(getContext().getContentResolver(),uri);
+        return cursor;
     }
 
     @Override

@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
-    android:layout_margin="10dp"
-    android:padding="10dp">
+    android:padding="12dp">
 
     <TextView
         android:layout_height="wrap_content"
@@ -12,10 +11,10 @@
         android:maxLines="1"
         android:ellipsize="end"
         android:id="@+id/heading_list"
-        android:textAlignment="center"
+        android:textAlignment="textStart"
         android:textStyle="bold"
         android:layout_marginTop="5dp"
-        android:textSize="25sp"
+        android:textSize="22sp"
         android:textColor="@color/list_heading"
         android:layout_weight="3"/>
 

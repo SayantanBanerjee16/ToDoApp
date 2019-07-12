@@ -86,7 +86,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
-        getSupportActionBar().setTitle("Edit To-Do");
+        getSupportActionBar().setTitle("Add To-Do");
         time = (Button) findViewById(R.id.timeButton);
         date = (Button) findViewById(R.id.dateButton);
         heading = (EditText) findViewById(R.id.heading);

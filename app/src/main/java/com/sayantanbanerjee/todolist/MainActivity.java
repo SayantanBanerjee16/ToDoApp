@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         image = (ImageView) findViewById(R.id.imageView);
-        image.animate().alphaBy(1f).setDuration(3000);
-        new CountDownTimer(3000,1000){
+        image.animate().alphaBy(1f).setDuration(1500);
+        new CountDownTimer(1500,1000){
 
             @Override
             public void onTick(long l) {

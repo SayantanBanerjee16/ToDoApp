@@ -7,11 +7,15 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sayantanbanerjee.todolist.data.ToDoContract;
 
@@ -23,6 +27,47 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
     TextView message;
     TextView date;
     TextView time;
+
+    private void deletePet() {
+        int rowsDeleted = getContentResolver().delete(mCurrentToDoUri, null, null);
+        if (rowsDeleted == 0) {
+            Toast.makeText(this, "Error with deleting To Do",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Deletion of To Do Successfully",
+                    Toast.LENGTH_SHORT).show();
+        }
+    // Close the activity
+    finish();
+
+}
+
+    private void showDeleteConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("DELETE");
+        builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                deletePet();
+            }
+        });
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Cancel" button, so dismiss the dialog
+                // and continue editing the pet.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    public void delete(View view) {
+        showDeleteConfirmationDialog();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

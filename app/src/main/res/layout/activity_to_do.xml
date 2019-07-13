@@ -142,6 +142,7 @@
             android:layout_weight="1"
             android:layout_margin="5dp"
             android:textStyle="bold|italic"
+            android:onClick="delete"
             />
 
     </LinearLayout>

@@ -9,6 +9,10 @@
         android:roundIcon="@drawable/todolist"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ToDoActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity
             android:name=".EditActivity"
             android:parentActivityName=".ListActivity"

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="HEADING"
+                android:textSize="40sp"
+                android:textAllCaps="true"
+                android:textColor="@color/colorHeading"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textAppearance="?android:textAppearanceMedium"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Date:    "
+                    android:textSize="16sp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorToDoDisplay"
+                    android:textStyle="bold"
+                    android:layout_gravity="start"
+                    android:textAppearance="?android:textAppearanceMedium"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="11/ 06 / 2019  "
+                    android:textSize="16sp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorToDoValue"
+                    android:textStyle="bold"
+                    android:layout_gravity="start"
+                    android:textAppearance="?android:textAppearanceMedium"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="TIME:    "
+                    android:textSize="16sp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorToDoDisplay"
+                    android:textStyle="bold"
+                    android:layout_gravity="start"
+                    android:textAppearance="?android:textAppearanceMedium"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="11 : 22 AM"
+                    android:textSize="16sp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorToDoValue"
+                    android:textStyle="bold"
+                    android:layout_gravity="start"
+                    android:textAppearance="?android:textAppearanceMedium"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="MESSAGE"
+                android:textSize="25sp"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/colorMessage"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textAppearance="?android:textAppearanceMedium"/>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:layout_margin="0dp">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NOTIFICATION OFF"
+            android:textColor="@color/colorButtonText"
+            android:background="@color/colorButton"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:textStyle="bold|italic"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EDIT"
+            android:textColor="@color/colorButtonText"
+            android:background="@color/colorButton"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:textStyle="bold|italic"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DELETE"
+            android:textColor="@color/colorButtonText"
+            android:background="@color/colorButton"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:textStyle="bold|italic"
+            />
+
+    </LinearLayout>
+</LinearLayout>

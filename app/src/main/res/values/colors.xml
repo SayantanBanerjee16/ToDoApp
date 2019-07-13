@@ -13,6 +13,7 @@
     <color name="colorEditAccent">#959ECF</color>
 
     <color name="colorHeading">#0027FF</color>
+    <color name="colorMessage">#5461AC</color>
     <color name="colorContent">#0055FF</color>
     <color name="colorHint">#AB75C7</color>
 
@@ -21,6 +22,14 @@
 
     <color name="list_heading">#043786</color>
     <color name="list_date_and_time">#5A0303</color>
+
+    <color name="colorToDoDisplay">#090808</color>
+    <color name="colorToDoValue">#8D0A0A</color>
+
+    <color name="colorButton">#8D0A0A</color>
+    <color name="colorButtonText">#FFFFFF</color>
+
+
 
 
 </resources>

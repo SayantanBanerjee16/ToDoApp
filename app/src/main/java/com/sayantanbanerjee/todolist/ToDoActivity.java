@@ -44,7 +44,10 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void showDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("DELETE");
+        builder.setMessage("Are you sure, you want to delete it?");
+        builder.setCancelable(false);
+        builder.setTitle("DELETE");
+        builder.setIcon(android.R.drawable.ic_menu_delete);
         builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 deletePet();
@@ -52,15 +55,11 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
         });
         builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Cancel" button, so dismiss the dialog
-                // and continue editing the pet.
                 if (dialog != null) {
                     dialog.dismiss();
                 }
             }
         });
-
-        // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }

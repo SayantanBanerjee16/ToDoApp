@@ -2,12 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="5dp">
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="104dp"
+        android:layout_height="0dp"
         android:layout_weight="9">
 
         <LinearLayout
@@ -98,6 +97,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="15dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="MESSAGE"
                 android:textAppearance="?android:textAppearanceMedium"
@@ -114,17 +114,20 @@
         android:layout_height="0dp"
         android:orientation="horizontal"
         android:layout_weight="1"
-        android:padding="5dp"
-        android:layout_margin="5dp">
+        android:padding="2dp"
+        android:layout_margin="5dp"
+        android:layout_gravity="center">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="NOTIFICATION OFF"
+            android:text="GO BACK"
             android:textColor="@color/colorButtonText"
             android:background="@color/colorButton"
             android:layout_weight="1"
             android:layout_margin="5dp"
             android:textStyle="bold|italic"
+            android:layout_gravity="center"
+            android:onClick="back"
             />
         <Button
             android:layout_width="wrap_content"
@@ -134,6 +137,7 @@
             android:background="@color/colorButton"
             android:layout_weight="1"
             android:layout_margin="5dp"
+            android:layout_gravity="center"
             android:textStyle="bold|italic"
             android:onClick="edit"
             />
@@ -145,6 +149,7 @@
             android:background="@color/colorButton"
             android:layout_weight="1"
             android:layout_margin="5dp"
+            android:layout_gravity="center"
             android:textStyle="bold|italic"
             android:onClick="delete"
             />

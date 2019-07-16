@@ -3,6 +3,7 @@ package com.sayantanbanerjee.todolist;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
@@ -28,8 +29,13 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
     TextView date;
     TextView time;
 
-    public void edit(View view){
-        Intent intent = new Intent(ToDoActivity.this,EditActivity.class);
+
+    public void back(View view) {
+        NavUtils.navigateUpFromSameTask(ToDoActivity.this);
+    }
+
+    public void edit(View view) {
+        Intent intent = new Intent(ToDoActivity.this, EditActivity.class);
         intent.setData(mCurrentToDoUri);
         startActivity(intent);
     }
@@ -43,10 +49,10 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
             Toast.makeText(this, "Deletion of To Do Successfully",
                     Toast.LENGTH_SHORT).show();
         }
-    // Close the activity
-    finish();
+        // Close the activity
+        finish();
 
-}
+    }
 
     private void showDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

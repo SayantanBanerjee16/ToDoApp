@@ -32,6 +32,8 @@ import com.sayantanbanerjee.todolist.data.ToDoContract;
 
 import java.util.Calendar;
 
+import static java.sql.Types.NULL;
+
 public class EditActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     Button time;
@@ -65,7 +67,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
 
     public void setDateDialog(View view) {
 
-        if (mCurrentToDoUri == null) {
+        if (YEAR == NULL && DAY == NULL && MONTH == NULL) {
             Calendar cal = Calendar.getInstance();
             int year = cal.get(Calendar.YEAR);
             int month = cal.get(Calendar.MONTH);
@@ -149,6 +151,10 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month += 1;
+
+                DAY = day;
+                MONTH = month;
+                YEAR = year;
                 if(day<10)
                 {
                     if(month<10)

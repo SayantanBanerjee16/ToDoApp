@@ -216,16 +216,58 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
 
         if (DateFormat.is24HourFormat(EditActivity.this)) {
-            time_string = hour + " : " + minute;
+            if(hour < 10 ){
+                if(minute < 10){
+                    time_string = "0" + hour + " : 0" + minute;
+                }else{
+                    time_string = "0" + hour + " : " + minute;
+                }
+            }else{
+                if(minute < 10){
+                    time_string = hour + " : 0" + minute;
+                }else{
+                    time_string = hour + " : " + minute;
+                }
+            }
         } else {
             if (hour == 0) {
-                time_string = "12 : " + minute + " AM";
-            } else if (hour < 12 && hour > 0) {
-                time_string = hour + " : " + minute + " AM";
+                if(minute < 10){
+                    time_string = 12 + " : 0" + minute + " AM";
+                }else{
+                    time_string = 12 + " : " + minute + " AM";
+                }
+            } else if (hour < 10) {
+                if(minute < 10){
+                    time_string = "0" + hour + " : 0" + minute + " AM";
+                }else{
+                    time_string = "0" + hour + " : " + minute + " AM";
+                }
+            } else if (hour < 12){
+                if(minute < 10){
+                    time_string = hour + " : 0" + minute + " AM";
+                }else{
+                    time_string = hour + " : " + minute + " AM";
+                }
             } else if (hour == 12) {
-                time_string = hour + " : " + minute + " PM";
+                if(minute < 10){
+                    time_string = 12 + " : 0" + minute + " PM";
+                }else{
+                    time_string = 12 + " : " + minute + " PM";
+                }
             } else {
-                time_string = (hour - 12) + " : " + minute + " PM";
+                if(minute < 10){
+                    if(hour - 12 < 10){
+                        time_string = "0" + (hour - 12) + " : 0" + minute + " PM";
+                    }else{
+                        time_string = (hour - 12) + " : 0" + minute + " PM";
+                    }
+                }else{
+                    if(hour - 12 < 10){
+                        time_string = "0" + (hour - 12) + " : " + minute + " PM";
+                    }else{
+                        time_string = (hour - 12) + " : " + minute + " PM";
+                    }
+                }
             }
         }
         time.setText(time_string);
@@ -268,7 +310,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
             DAY = Integer.parseInt(day_string);
             MONTH = Integer.parseInt(month_string);
             YEAR = Integer.parseInt(year_string);
-            
+
             heading.setText(heading_string);
             message.setText(message_string);
             date.setText(date_string);

@@ -149,7 +149,23 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month += 1;
-                date_string = day + " / " + month + " / " + year;
+                if(day<10)
+                {
+                    if(month<10)
+                    {
+                        date_string = "0" + day + " / 0" + month + " / " + year;
+                    }else{
+                        date_string = "0" + day + " / " + month + " / " + year;
+                    }
+                }else{
+                    if(month<10)
+                    {
+                        date_string = day + " / 0" + month + " / " + year;
+                    }else{
+                        date_string = day + " / " + month + " / " + year;
+                    }
+                }
+
                 date.setText(date_string);
             }
         };
@@ -244,11 +260,15 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
             date_string = cursor.getString(dateColumnIndex);
             time_string = cursor.getString(timeColumnIndex);
 
-            DAY = Integer.parseInt(Integer.toString(date_string.charAt(0)) + Integer.toString(date_string.charAt(1)));
-            MONTH = Integer.parseInt(Integer.toString(date_string.charAt(5)));
-            YEAR = Integer.parseInt(Integer.toString(date_string.charAt(9)) + Integer.toString(date_string.charAt(10)) + Integer.toString(date_string.charAt(11)) + Integer.toString(date_string.charAt(12)));
+            String day_string = Character.toString(date_string.charAt(0)) + Character.toString(date_string.charAt(1));
+            String month_string = Character.toString(date_string.charAt(5)) + Character.toString(date_string.charAt(6));
+            String year_string = Character.toString(date_string.charAt(10)) + Character.toString(date_string.charAt(11)) +
+                    Character.toString(date_string.charAt(12)) + Character.toString(date_string.charAt(13));
 
-            Toast.makeText(this, Integer.toString(DAY) + " " + Integer.toString(MONTH) + " " + Integer.toString(YEAR), Toast.LENGTH_LONG).show();
+            DAY = Integer.parseInt(day_string);
+            MONTH = Integer.parseInt(month_string);
+            YEAR = Integer.parseInt(year_string);
+            
             heading.setText(heading_string);
             message.setText(message_string);
             date.setText(date_string);

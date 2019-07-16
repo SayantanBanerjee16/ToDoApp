@@ -7,9 +7,11 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -58,6 +60,46 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
+
+    private void deleteToDo() {
+        int rowsDeleted = getContentResolver().delete(mCurrentToDoUri, null, null);
+        if (rowsDeleted == 0) {
+            Toast.makeText(this, "Error with deleting To Do",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Deletion of To Do Successfully",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        Intent intent = new Intent(EditActivity.this,ListActivity.class);
+        startActivity(intent);
+        this.finish();
+
+    }
+
+    private void showDeleteConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure, you want to delete it?");
+        builder.setCancelable(false);
+        builder.setTitle("DELETE");
+        builder.setIcon(android.R.drawable.ic_menu_delete);
+        builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                deleteToDo();
+            }
+        });
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
     private void setDialogOfDate(int year, int month, int day) {
         DatePickerDialog dialog = new DatePickerDialog(
                 EditActivity.this,
@@ -85,7 +127,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
     public void setTimeDialog(View view) {
 
         DialogFragment timePicker = new TimePickerFragment();
-        if(HOUR != NULL && MINUTE != NULL){
+        if (HOUR != NULL && MINUTE != NULL) {
             Bundle bundle = new Bundle();
             bundle.putInt("hour", HOUR);
             bundle.putInt("minute", MINUTE);
@@ -164,19 +206,16 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
                 DAY = day;
                 MONTH = month;
                 YEAR = year;
-                if(day<10)
-                {
-                    if(month<10)
-                    {
+                if (day < 10) {
+                    if (month < 10) {
                         date_string = "0" + day + " / 0" + month + " / " + year;
-                    }else{
+                    } else {
                         date_string = "0" + day + " / " + month + " / " + year;
                     }
-                }else{
-                    if(month<10)
-                    {
+                } else {
+                    if (month < 10) {
                         date_string = day + " / 0" + month + " / " + year;
-                    }else{
+                    } else {
                         date_string = day + " / " + month + " / " + year;
                     }
                 }
@@ -190,6 +229,19 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_edit, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem delete = menu.findItem(R.id.delete);
+        delete.setIcon(android.R.drawable.ic_menu_delete);
+        if (mCurrentToDoUri != null) {
+            delete.setVisible(true);
+        } else {
+            delete.setVisible(false);
+        }
         return true;
     }
 
@@ -209,15 +261,13 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
                     } else {
                         updateIntoDatabase();
                     }
-
                     //exit activity
                     finish();
                 }
-
                 return true;
 
             case R.id.delete:
-
+                showDeleteConfirmationDialog();
                 return true;
 
             case android.R.id.home:
@@ -231,55 +281,55 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
 
         if (DateFormat.is24HourFormat(EditActivity.this)) {
-            if(hour < 10 ){
-                if(minute < 10){
+            if (hour < 10) {
+                if (minute < 10) {
                     time_string = "0" + hour + " : 0" + minute;
-                }else{
+                } else {
                     time_string = "0" + hour + " : " + minute;
                 }
-            }else{
-                if(minute < 10){
+            } else {
+                if (minute < 10) {
                     time_string = hour + " : 0" + minute;
-                }else{
+                } else {
                     time_string = hour + " : " + minute;
                 }
             }
         } else {
             if (hour == 0) {
-                if(minute < 10){
+                if (minute < 10) {
                     time_string = 12 + " : 0" + minute + " AM";
-                }else{
+                } else {
                     time_string = 12 + " : " + minute + " AM";
                 }
             } else if (hour < 10) {
-                if(minute < 10){
+                if (minute < 10) {
                     time_string = "0" + hour + " : 0" + minute + " AM";
-                }else{
+                } else {
                     time_string = "0" + hour + " : " + minute + " AM";
                 }
-            } else if (hour < 12){
-                if(minute < 10){
+            } else if (hour < 12) {
+                if (minute < 10) {
                     time_string = hour + " : 0" + minute + " AM";
-                }else{
+                } else {
                     time_string = hour + " : " + minute + " AM";
                 }
             } else if (hour == 12) {
-                if(minute < 10){
+                if (minute < 10) {
                     time_string = 12 + " : 0" + minute + " PM";
-                }else{
+                } else {
                     time_string = 12 + " : " + minute + " PM";
                 }
             } else {
-                if(minute < 10){
-                    if(hour - 12 < 10){
+                if (minute < 10) {
+                    if (hour - 12 < 10) {
                         time_string = "0" + (hour - 12) + " : 0" + minute + " PM";
-                    }else{
+                    } else {
                         time_string = (hour - 12) + " : 0" + minute + " PM";
                     }
-                }else{
-                    if(hour - 12 < 10){
+                } else {
+                    if (hour - 12 < 10) {
                         time_string = "0" + (hour - 12) + " : " + minute + " PM";
-                    }else{
+                    } else {
                         time_string = (hour - 12) + " : " + minute + " PM";
                     }
                 }
@@ -335,22 +385,21 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
             String hour_string = Character.toString(time_string.charAt(0)) + Character.toString(time_string.charAt(1));
             int HOUR_TEMP = Integer.parseInt(hour_string);
 
-            if(time_string.length() == 10){
-                if(time_string.charAt(8) == 'A' && time_string.charAt(8) == 'M'){
-                    if(HOUR_TEMP == 12){
+            if (time_string.length() == 10) {
+                if (time_string.charAt(8) == 'A' && time_string.charAt(8) == 'M') {
+                    if (HOUR_TEMP == 12) {
                         HOUR = 0;
-                    }else{
+                    } else {
                         HOUR = HOUR_TEMP;
                     }
-                }else{
-                    if(HOUR_TEMP == 12){
+                } else {
+                    if (HOUR_TEMP == 12) {
                         HOUR = 12;
-                    }else{
+                    } else {
                         HOUR = HOUR_TEMP + 12;
                     }
                 }
-            }else
-            {
+            } else {
                 HOUR = HOUR_TEMP;
             }
 

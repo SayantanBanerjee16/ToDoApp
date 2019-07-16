@@ -51,6 +51,8 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
     int MONTH;
     int DAY;
     int YEAR;
+    int HOUR;
+    int MINUTE;
 
     private static final int TODO_LOADER = 1;
 
@@ -81,7 +83,14 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
 
 
     public void setTimeDialog(View view) {
+
         DialogFragment timePicker = new TimePickerFragment();
+        if(HOUR != NULL && MINUTE != NULL){
+            Bundle bundle = new Bundle();
+            bundle.putInt("hour", HOUR);
+            bundle.putInt("minute", MINUTE);
+            timePicker.setArguments(bundle);
+        }
         timePicker.show(getSupportFragmentManager(), "time picker");
     }
 
@@ -278,6 +287,9 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
         }
         time.setText(time_string);
 
+        HOUR = hour;
+        MINUTE = minute;
+
     }
 
 
@@ -316,6 +328,32 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
             DAY = Integer.parseInt(day_string);
             MONTH = Integer.parseInt(month_string);
             YEAR = Integer.parseInt(year_string);
+
+            String minute_string = Character.toString(time_string.charAt(5)) + Character.toString(time_string.charAt(6));
+            MINUTE = Integer.parseInt(minute_string);
+
+            String hour_string = Character.toString(time_string.charAt(0)) + Character.toString(time_string.charAt(1));
+            int HOUR_TEMP = Integer.parseInt(hour_string);
+
+            if(time_string.length() == 10){
+                if(time_string.charAt(8) == 'A' && time_string.charAt(8) == 'M'){
+                    if(HOUR_TEMP == 12){
+                        HOUR = 0;
+                    }else{
+                        HOUR = HOUR_TEMP;
+                    }
+                }else{
+                    if(HOUR_TEMP == 12){
+                        HOUR = 12;
+                    }else{
+                        HOUR = HOUR_TEMP + 12;
+                    }
+                }
+            }else
+            {
+                HOUR = HOUR_TEMP;
+            }
+
 
             heading.setText(heading_string);
             message.setText(message_string);

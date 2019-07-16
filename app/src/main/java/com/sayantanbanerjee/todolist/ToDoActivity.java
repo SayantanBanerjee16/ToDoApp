@@ -28,7 +28,13 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
     TextView date;
     TextView time;
 
-    private void deletePet() {
+    public void edit(View view){
+        Intent intent = new Intent(ToDoActivity.this,EditActivity.class);
+        intent.setData(mCurrentToDoUri);
+        startActivity(intent);
+    }
+
+    private void deleteToDo() {
         int rowsDeleted = getContentResolver().delete(mCurrentToDoUri, null, null);
         if (rowsDeleted == 0) {
             Toast.makeText(this, "Error with deleting To Do",
@@ -50,7 +56,7 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
         builder.setIcon(android.R.drawable.ic_menu_delete);
         builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                deletePet();
+                deleteToDo();
             }
         });
         builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

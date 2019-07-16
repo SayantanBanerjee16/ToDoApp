@@ -4,103 +4,106 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="5dp">
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="104dp"
         android:layout_weight="9">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="vertical"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp">
+            android:layout_margin="10dp"
+            android:orientation="vertical">
 
             <TextView
+                android:id="@+id/heading_ToDo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:fontFamily="sans-serif-medium"
                 android:text="HEADING"
-                android:id="@+id/heading_ToDo"
-                android:textSize="40sp"
                 android:textAllCaps="true"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textColor="@color/colorHeading"
-                android:textStyle="bold"
-                android:layout_gravity="center"
-                android:textAppearance="?android:textAppearanceMedium"/>
+                android:textSize="40sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="15dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="Date:    "
-                    android:textSize="16sp"
-                    android:textAllCaps="true"
-                    android:textColor="@color/colorToDoDisplay"
-                    android:textStyle="bold"
-                    android:layout_gravity="start"
-                    android:textAppearance="?android:textAppearanceMedium"/>
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Date:    "
+                    android:textAllCaps="true"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textColor="@color/colorToDoDisplay"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/date_ToDo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
                     android:fontFamily="sans-serif-medium"
                     android:text="11/ 06 / 2019  "
-                    android:id="@+id/date_ToDo"
-                    android:textSize="16sp"
                     android:textAllCaps="true"
+                    android:textAppearance="?android:textAppearanceMedium"
                     android:textColor="@color/colorToDoValue"
-                    android:textStyle="bold"
-                    android:layout_gravity="start"
-                    android:textAppearance="?android:textAppearanceMedium"/>
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="TIME:    "
-                    android:textSize="16sp"
-                    android:textAllCaps="true"
-                    android:textColor="@color/colorToDoDisplay"
-                    android:textStyle="bold"
-                    android:layout_gravity="start"
-                    android:textAppearance="?android:textAppearanceMedium"/>
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="TIME:    "
+                    android:textAllCaps="true"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textColor="@color/colorToDoDisplay"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/time_ToDo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
                     android:fontFamily="sans-serif-medium"
                     android:text="11 : 22 AM"
-                    android:textSize="16sp"
                     android:textAllCaps="true"
-                    android:id="@+id/time_ToDo"
+                    android:textAppearance="?android:textAppearanceMedium"
                     android:textColor="@color/colorToDoValue"
-                    android:textStyle="bold"
-                    android:layout_gravity="start"
-                    android:textAppearance="?android:textAppearanceMedium"/>
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <TextView
+                android:id="@+id/message_ToDo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="MESSAGE"
-                android:textSize="25sp"
-                android:layout_marginTop="20dp"
-                android:id="@+id/message_ToDo"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textColor="@color/colorMessage"
-                android:textStyle="bold"
-                android:layout_gravity="center"
-                android:textAppearance="?android:textAppearanceMedium"/>
+                android:textSize="25sp"
+                android:textStyle="bold" />
 
 
         </LinearLayout>
@@ -111,8 +114,8 @@
         android:layout_height="0dp"
         android:orientation="horizontal"
         android:layout_weight="1"
-        android:padding="10dp"
-        android:layout_margin="0dp">
+        android:padding="5dp"
+        android:layout_margin="5dp">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -132,6 +135,7 @@
             android:layout_weight="1"
             android:layout_margin="5dp"
             android:textStyle="bold|italic"
+            android:onClick="edit"
             />
         <Button
             android:layout_width="wrap_content"

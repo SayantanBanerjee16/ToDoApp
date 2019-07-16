@@ -1,20 +1,24 @@
 package com.sayantanbanerjee.todolist;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 import androidx.fragment.app.DialogFragment;
 import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +32,7 @@ import com.sayantanbanerjee.todolist.data.ToDoContract;
 
 import java.util.Calendar;
 
-public class EditActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
+public class EditActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     Button time;
     Button date;
@@ -39,21 +43,38 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
     String message_string;
     EditText heading;
     EditText message;
+
+    Uri mCurrentToDoUri;
+
+    int MONTH;
+    int DAY;
+    int YEAR;
+
+    private static final int TODO_LOADER = 1;
+
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
-    public void setDateDialog(View view){
-        Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-
+    private void setDialogOfDate(int year, int month, int day) {
         DatePickerDialog dialog = new DatePickerDialog(
                 EditActivity.this,
                 android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                mDateSetListener,year,month,day);
-
+                mDateSetListener, year, month, day);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
+    }
+
+    public void setDateDialog(View view) {
+
+        if (mCurrentToDoUri == null) {
+            Calendar cal = Calendar.getInstance();
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH);
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+
+            setDialogOfDate(year, month, day);
+        } else {
+            setDialogOfDate(YEAR, MONTH - 1, DAY);
+        }
     }
 
 
@@ -62,22 +83,42 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
         timePicker.show(getSupportFragmentManager(), "time picker");
     }
 
-    public void insertIntoDatabase(){
+    public void insertIntoDatabase() {
         date_string = date_string.trim();
         time_string = time_string.trim();
 
         ContentValues values = new ContentValues();
-        values.put(ToDoContract.ToDoEntry.COLUMN_HEADING,heading_string);
-        values.put(ToDoContract.ToDoEntry.COLUMN_MESSAGE,message_string);
-        values.put(ToDoContract.ToDoEntry.COLUMN_DATE,date_string);
-        values.put(ToDoContract.ToDoEntry.COLUMN_TIME,time_string);
+        values.put(ToDoContract.ToDoEntry.COLUMN_HEADING, heading_string);
+        values.put(ToDoContract.ToDoEntry.COLUMN_MESSAGE, message_string);
+        values.put(ToDoContract.ToDoEntry.COLUMN_DATE, date_string);
+        values.put(ToDoContract.ToDoEntry.COLUMN_TIME, time_string);
 
-        Uri uri = getContentResolver().insert(ToDoContract.ToDoEntry.CONTENT_URI,values);
+        Uri uri = getContentResolver().insert(ToDoContract.ToDoEntry.CONTENT_URI, values);
         if (uri == null) {
-            Toast.makeText(this,"Error with inserting To Do",
+            Toast.makeText(this, "Error with inserting To Do",
                     Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "To Do Saved",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void updateIntoDatabase() {
+        date_string = date_string.trim();
+        time_string = time_string.trim();
+
+        ContentValues values = new ContentValues();
+        values.put(ToDoContract.ToDoEntry.COLUMN_HEADING, heading_string);
+        values.put(ToDoContract.ToDoEntry.COLUMN_MESSAGE, message_string);
+        values.put(ToDoContract.ToDoEntry.COLUMN_DATE, date_string);
+        values.put(ToDoContract.ToDoEntry.COLUMN_TIME, time_string);
+
+        Integer rowsAffected = getContentResolver().update(mCurrentToDoUri, values, null, null);
+        if (rowsAffected == null) {
+            Toast.makeText(this, "Error with updating To Do",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "To Do Updated",
                     Toast.LENGTH_SHORT).show();
         }
     }
@@ -86,20 +127,33 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
-        getSupportActionBar().setTitle("Add To-Do");
+
         time = (Button) findViewById(R.id.timeButton);
         date = (Button) findViewById(R.id.dateButton);
         heading = (EditText) findViewById(R.id.heading);
         message = (EditText) findViewById(R.id.message);
 
+        Intent intent = getIntent();
+        mCurrentToDoUri = intent.getData();
+
+        if (mCurrentToDoUri == null) {
+            getSupportActionBar().setTitle("Add To-Do");
+
+        } else {
+            getSupportActionBar().setTitle("Edit To-Do");
+            getSupportLoaderManager().initLoader(TODO_LOADER, null, this);
+        }
+
+
         mDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month+=1;
+                month += 1;
                 date_string = day + " / " + month + " / " + year;
                 date.setText(date_string);
             }
         };
+
     }
 
     @Override
@@ -115,10 +169,16 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
             case R.id.save:
                 message_string = message.getText().toString().trim();
                 heading_string = heading.getText().toString().trim();
-                if(TextUtils.isEmpty(heading_string) || TextUtils.isEmpty(message_string) || TextUtils.isEmpty(time_string)|| TextUtils.isEmpty(date_string)){
-                    Toast.makeText(EditActivity.this,"No Field Should remain empty!",Toast.LENGTH_LONG).show();
-                }else{
-                    insertIntoDatabase();
+                if (TextUtils.isEmpty(heading_string) || TextUtils.isEmpty(message_string) || TextUtils.isEmpty(time_string) || TextUtils.isEmpty(date_string)) {
+                    Toast.makeText(EditActivity.this, "No Field Should remain empty!", Toast.LENGTH_LONG).show();
+                } else {
+
+                    if (mCurrentToDoUri == null) {
+                        insertIntoDatabase();
+                    } else {
+                        updateIntoDatabase();
+                    }
+
                     //exit activity
                     finish();
                 }
@@ -140,22 +200,64 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
 
         if (DateFormat.is24HourFormat(EditActivity.this)) {
-            time_string= hour + " : " + minute;
+            time_string = hour + " : " + minute;
         } else {
             if (hour == 0) {
                 time_string = "12 : " + minute + " AM";
             } else if (hour < 12 && hour > 0) {
                 time_string = hour + " : " + minute + " AM";
-            } else if (hour == 12)
-            {
+            } else if (hour == 12) {
                 time_string = hour + " : " + minute + " PM";
-            }
-            else
-            {
-                time_string = (hour-12) + " : " + minute + " PM";
+            } else {
+                time_string = (hour - 12) + " : " + minute + " PM";
             }
         }
         time.setText(time_string);
+
+    }
+
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] projection = {
+                ToDoContract.ToDoEntry.COLUMN_HEADING,
+                ToDoContract.ToDoEntry.COLUMN_MESSAGE,
+                ToDoContract.ToDoEntry.COLUMN_DATE,
+                ToDoContract.ToDoEntry.COLUMN_TIME};
+
+        return new CursorLoader(this, mCurrentToDoUri, projection, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        if (cursor == null || cursor.getCount() < 1) {
+            return;
+        }
+        if (cursor.moveToFirst()) {
+            int headingColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_HEADING);
+            int messageColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_MESSAGE);
+            int dateColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_DATE);
+            int timeColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_TIME);
+
+            heading_string = cursor.getString(headingColumnIndex);
+            message_string = cursor.getString(messageColumnIndex);
+            date_string = cursor.getString(dateColumnIndex);
+            time_string = cursor.getString(timeColumnIndex);
+
+            DAY = Integer.parseInt(Integer.toString(date_string.charAt(0)) + Integer.toString(date_string.charAt(1)));
+            MONTH = Integer.parseInt(Integer.toString(date_string.charAt(5)));
+            YEAR = Integer.parseInt(Integer.toString(date_string.charAt(9)) + Integer.toString(date_string.charAt(10)) + Integer.toString(date_string.charAt(11)) + Integer.toString(date_string.charAt(12)));
+
+            Toast.makeText(this, Integer.toString(DAY) + " " + Integer.toString(MONTH) + " " + Integer.toString(YEAR), Toast.LENGTH_LONG).show();
+            heading.setText(heading_string);
+            message.setText(message_string);
+            date.setText(date_string);
+            time.setText(time_string);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
 
     }
 }

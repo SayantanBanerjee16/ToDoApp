@@ -101,6 +101,7 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] projection = {
+                ToDoContract.ToDoEntry._ID,
                 ToDoContract.ToDoEntry.COLUMN_HEADING,
                 ToDoContract.ToDoEntry.COLUMN_MESSAGE,
                 ToDoContract.ToDoEntry.COLUMN_DATE,
@@ -116,11 +117,13 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
             return;
         }
         if (cursor.moveToFirst()) {
+            int idColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry._ID);
             int headingColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_HEADING);
             int messageColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_MESSAGE);
             int dateColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_DATE);
             int timeColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_TIME);
 
+            int id_todo = cursor.getInt(idColumnIndex);
             String heading_todo = cursor.getString(headingColumnIndex);
             String message_todo = cursor.getString(messageColumnIndex);
             String date_todo = cursor.getString(dateColumnIndex);

@@ -7,7 +7,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9">
+        android:layout_weight="7">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -109,50 +109,93 @@
         </LinearLayout>
 
     </ScrollView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:layout_weight="1"
-        android:padding="2dp"
         android:layout_margin="5dp"
-        android:layout_gravity="center">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="GO BACK"
-            android:textColor="@color/colorButtonText"
-            android:background="@color/colorButton"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:textStyle="bold|italic"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_gravity="center"
-            android:onClick="back"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="EDIT"
-            android:textColor="@color/colorButtonText"
-            android:background="@color/colorButton"
             android:layout_weight="1"
-            android:layout_margin="5dp"
+            android:orientation="horizontal"
+            android:padding="2dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enable/Disable Notification"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="@color/colorNotification"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="16dp"
+                android:layout_gravity="center"/>
+
+           <Switch
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center|right"
+               android:layout_marginEnd="16dp"
+               android:id="@+id/notificationSwitch"
+               android:theme="@style/SCBSwitch"
+               android:checked="true" />
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_gravity="center"
-            android:textStyle="bold|italic"
-            android:onClick="edit"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="DELETE"
-            android:textColor="@color/colorButtonText"
-            android:background="@color/colorButton"
-            android:layout_weight="1"
             android:layout_margin="5dp"
-            android:layout_gravity="center"
-            android:textStyle="bold|italic"
-            android:onClick="delete"
-            />
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:padding="2dp">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@color/colorButton"
+                android:onClick="back"
+                android:text="GO BACK"
+                android:textColor="@color/colorButtonText"
+                android:textStyle="bold|italic" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@color/colorButton"
+                android:onClick="edit"
+                android:text="EDIT"
+                android:textColor="@color/colorButtonText"
+                android:textStyle="bold|italic" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@color/colorButton"
+                android:onClick="delete"
+                android:text="DELETE"
+                android:textColor="@color/colorButtonText"
+                android:textStyle="bold|italic" />
+
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

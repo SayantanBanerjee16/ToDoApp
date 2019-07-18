@@ -16,6 +16,7 @@
     <color name="colorMessage">#5461AC</color>
     <color name="colorContent">#0055FF</color>
     <color name="colorHint">#AB75C7</color>
+    <color name="colorNotification">#880329</color>
 
     <color name="colorDateTimeBackground">#1ECBE4</color>
     <color name="colorDateTimeFont">#090808</color>

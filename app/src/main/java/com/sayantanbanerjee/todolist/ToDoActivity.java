@@ -32,6 +32,12 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
     TextView date;
     TextView time;
 
+    int MONTH;
+    int DAY;
+    int YEAR;
+    int HOUR;
+    int MINUTE;
+
 
     public void back(View view) {
         NavUtils.navigateUpFromSameTask(ToDoActivity.this);
@@ -134,6 +140,39 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
             String date_todo = cursor.getString(dateColumnIndex);
             String time_todo = cursor.getString(timeColumnIndex);
             int notification_todo = cursor.getInt(notificationColumnIndex);
+
+            String day_string = Character.toString(date_todo.charAt(0)) + Character.toString(date_todo.charAt(1));
+            String month_string = Character.toString(date_todo.charAt(5)) + Character.toString(date_todo.charAt(6));
+            String year_string = Character.toString(date_todo.charAt(10)) + Character.toString(date_todo.charAt(11)) +
+                    Character.toString(date_todo.charAt(12)) + Character.toString(date_todo.charAt(13));
+
+            DAY = Integer.parseInt(day_string);
+            MONTH = Integer.parseInt(month_string);
+            YEAR = Integer.parseInt(year_string);
+
+            String minute_string = Character.toString(time_todo.charAt(5)) + Character.toString(time_todo.charAt(6));
+            MINUTE = Integer.parseInt(minute_string);
+
+            String hour_string = Character.toString(time_todo.charAt(0)) + Character.toString(time_todo.charAt(1));
+            int HOUR_TEMP = Integer.parseInt(hour_string);
+
+            if (time_todo.length() == 10) {
+                if (time_todo.charAt(8) == 'A' && time_todo.charAt(8) == 'M') {
+                    if (HOUR_TEMP == 12) {
+                        HOUR = 0;
+                    } else {
+                        HOUR = HOUR_TEMP;
+                    }
+                } else {
+                    if (HOUR_TEMP == 12) {
+                        HOUR = 12;
+                    } else {
+                        HOUR = HOUR_TEMP + 12;
+                    }
+                }
+            } else {
+                HOUR = HOUR_TEMP;
+            }
 
             heading.setText(heading_todo);
             message.setText(message_todo);

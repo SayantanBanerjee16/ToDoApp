@@ -68,7 +68,8 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
                 ToDoContract.ToDoEntry._ID,
                 ToDoContract.ToDoEntry.COLUMN_HEADING,
                 ToDoContract.ToDoEntry.COLUMN_DATE,
-                ToDoContract.ToDoEntry.COLUMN_TIME};
+                ToDoContract.ToDoEntry.COLUMN_TIME,
+                ToDoContract.ToDoEntry.COLUMN_NOTIFICATION};
 
         return new CursorLoader(this, ToDoContract.ToDoEntry.CONTENT_URI,projection,null,null,null);
     }

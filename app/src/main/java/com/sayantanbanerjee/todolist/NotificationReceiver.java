@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
@@ -26,16 +27,19 @@ public class NotificationReceiver extends BroadcastReceiver {
         int active;
         String title;
         String message;
+        Uri mCurrentToDo;
 
         ID = intent.getIntExtra("ID", 0);
         title = intent.getStringExtra("Title");
         message = intent.getStringExtra("Message");
         active = intent.getIntExtra("SwitchChecked", 2);
+        mCurrentToDo = intent.getData();
 
         if (ID != 0) {
-            Intent notificationIntent = new Intent(context, ListActivity.class);
+            Intent notificationIntent = new Intent(context, ToDoActivity.class);
+            notificationIntent.putExtra("ID",ID);
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-            stackBuilder.addParentStack(ListActivity.class);
+            stackBuilder.addParentStack(ToDoActivity.class);
             stackBuilder.addNextIntent(notificationIntent);
 
             PendingIntent pendingIntent = stackBuilder.getPendingIntent(ID, PendingIntent.FLAG_UPDATE_CURRENT);

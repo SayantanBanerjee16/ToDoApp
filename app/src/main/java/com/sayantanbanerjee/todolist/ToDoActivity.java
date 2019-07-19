@@ -1,7 +1,5 @@
 package com.sayantanbanerjee.todolist;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 import androidx.loader.app.LoaderManager;
@@ -10,8 +8,8 @@ import androidx.loader.content.Loader;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,7 +26,9 @@ import android.widget.Toast;
 
 import com.sayantanbanerjee.todolist.data.ToDoContract;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class ToDoActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -40,6 +40,7 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
     TextView message;
     TextView date;
     TextView time;
+    TextView NotificationText;
 
     String heading_todo;
     String message_todo;
@@ -56,21 +57,28 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
 
     int isSwitchChecked;
 
-    private void Notification(){
+    private void updateIntoDatabaseNotification() {
+        ContentValues values = new ContentValues();
+        values.put(ToDoContract.ToDoEntry.COLUMN_NOTIFICATION, 2);
+        getContentResolver().update(mCurrentToDoUri, values, null, null);
+    }
+
+    private void Notification() {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent notificationIntent;
         notificationIntent = new Intent(this, NotificationReceiver.class);
-        notificationIntent.putExtra("ID",id_todo);
-        notificationIntent.putExtra("Title",heading_todo);
-        notificationIntent.putExtra("Message",message_todo);
-        notificationIntent.putExtra("SwitchChecked",isSwitchChecked);
+        notificationIntent.putExtra("ID", id_todo);
+        notificationIntent.putExtra("Title", heading_todo);
+        notificationIntent.putExtra("Message", message_todo);
+        notificationIntent.putExtra("SwitchChecked", isSwitchChecked);
+        notificationIntent.setData(mCurrentToDoUri);
         PendingIntent broadcast = PendingIntent.getBroadcast(this, id_todo, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.DAY_OF_MONTH,DAY);
-        cal.set(Calendar.MONTH,MONTH - 1);
-        cal.set(Calendar.YEAR,YEAR);
-        cal.set(Calendar.HOUR_OF_DAY,HOUR);
-        cal.set(Calendar.MINUTE,MINUTE);
+        cal.set(Calendar.DAY_OF_MONTH, DAY);
+        cal.set(Calendar.MONTH, MONTH - 1);
+        cal.set(Calendar.YEAR, YEAR);
+        cal.set(Calendar.HOUR_OF_DAY, HOUR);
+        cal.set(Calendar.MINUTE, MINUTE);
         cal.set(Calendar.SECOND, 0);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
     }
@@ -148,11 +156,16 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
         message = (TextView) findViewById(R.id.message_ToDo);
         date = (TextView) findViewById(R.id.date_ToDo);
         time = (TextView) findViewById(R.id.time_ToDo);
+        NotificationText = (TextView) findViewById(R.id.notificationText);
         nSwitch = (Switch) findViewById(R.id.notificationSwitch);
-
 
         Intent intent = getIntent();
         mCurrentToDoUri = intent.getData();
+
+        if(mCurrentToDoUri == null){
+            int position_ID = intent.getIntExtra("ID",0);
+            mCurrentToDoUri = ContentUris.withAppendedId(ToDoContract.ToDoEntry.CONTENT_URI, position_ID);
+        }
 
         getSupportLoaderManager().initLoader(TODO_LOADER, null, this);
 
@@ -251,14 +264,62 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
             date.setText(date_todo);
             time.setText(time_todo);
 
-            if (notification_todo == 1) {
-                nSwitch.setChecked(true);
-                isSwitchChecked = 1;
-            } else {
-                nSwitch.setChecked(false);
-                isSwitchChecked = 0;
+            Log.i("NOTIFICATION TODO", Integer.toString(notification_todo));
+
+
+            if (notification_todo != 2) {
+                try {
+                    Date dateObject = new Date();
+                    SimpleDateFormat dateFormatter = new SimpleDateFormat("dd / MM / YYYY");
+                    SimpleDateFormat timeFormatter;
+                    if (time.length() == 10) {
+                        timeFormatter = new SimpleDateFormat("h : mm a");
+                    } else {
+                        timeFormatter = new SimpleDateFormat("HH : mm");
+                    }
+
+                    String current_date_string = dateFormatter.format(dateObject);
+                    Date date_current = dateFormatter.parse(current_date_string);
+                    String current_time_string = timeFormatter.format(dateObject);
+                    Date time_current = timeFormatter.parse(current_time_string);
+
+                    Date date_compare = dateFormatter.parse(date_todo);
+                    Date time_compare = timeFormatter.parse(time_todo);
+
+                    Log.i("date compare", date_compare.toString());
+                    Log.i("date current", date_current.toString());
+                    Log.i("time compare", time_compare.toString());
+                    Log.i("time current", time_current.toString());
+
+                    if (date_current.after(date_compare) || date_current.equals(date_compare)) {
+                        if (time_current.after(time_compare) || time_current.equals(time_compare)) {
+                            updateIntoDatabaseNotification();
+                            notification_todo = 2;
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-            Log.i("LOAD FINISHED", Integer.toString(isSwitchChecked));
+
+            if (notification_todo == 2) {
+                nSwitch.setEnabled(false);
+                NotificationText.setText("To Do already occured!");
+            } else {
+                if (notification_todo == 1) {
+                    nSwitch.setChecked(true);
+                    isSwitchChecked = 1;
+                    NotificationText.setText("Tap to disable Notification");
+                } else {
+                    nSwitch.setChecked(false);
+                    isSwitchChecked = 0;
+                    NotificationText.setText("Tap to enable Notification");
+                }
+                Log.i("LOAD FINISHED", Integer.toString(isSwitchChecked));
+            }
+
+
         }
     }
 

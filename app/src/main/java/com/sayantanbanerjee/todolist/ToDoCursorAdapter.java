@@ -7,17 +7,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sayantanbanerjee.todolist.data.ToDoContract;
 
+
 public class ToDoCursorAdapter extends CursorAdapter {
-    public ToDoCursorAdapter(Context context, Cursor c){
-        super(context,c,0);
+
+    int notification;
+    int id;
+
+    public ToDoCursorAdapter(Context context, Cursor c) {
+        super(context, c, 0);
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        return LayoutInflater.from(context).inflate(R.layout.listitem, viewGroup,false);
+        return LayoutInflater.from(context).inflate(R.layout.listitem, viewGroup, false);
     }
 
     @Override
@@ -27,10 +33,12 @@ public class ToDoCursorAdapter extends CursorAdapter {
         TextView date_list = (TextView) view.findViewById(R.id.date_list);
         TextView time_list = (TextView) view.findViewById(R.id.time_list);
 
+        int idColIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry._ID);
         int headingColIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_HEADING);
         int dateColIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_DATE);
         int timeColIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_TIME);
 
+        id = cursor.getInt(idColIndex);
         String heading = cursor.getString(headingColIndex);
         String date = cursor.getString(dateColIndex);
         String time = cursor.getString(timeColIndex);

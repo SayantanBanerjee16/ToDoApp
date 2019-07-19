@@ -67,7 +67,7 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
         PendingIntent broadcast = PendingIntent.getBroadcast(this, id_todo, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_MONTH,DAY);
-        cal.set(Calendar.MONTH,MONTH);
+        cal.set(Calendar.MONTH,MONTH - 1);
         cal.set(Calendar.YEAR,YEAR);
         cal.set(Calendar.HOUR_OF_DAY,HOUR);
         cal.set(Calendar.MINUTE,MINUTE);

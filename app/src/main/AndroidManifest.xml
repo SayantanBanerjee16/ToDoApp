@@ -40,6 +40,8 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name=".NotificationReceiver"/>
+
         <provider
             android:name=".data.ToDoProvider"
             android:authorities="com.example.android.todo"

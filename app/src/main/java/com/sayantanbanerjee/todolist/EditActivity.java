@@ -145,6 +145,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
         values.put(ToDoContract.ToDoEntry.COLUMN_MESSAGE, message_string);
         values.put(ToDoContract.ToDoEntry.COLUMN_DATE, date_string);
         values.put(ToDoContract.ToDoEntry.COLUMN_TIME, time_string);
+        values.put(ToDoContract.ToDoEntry.COLUMN_NOTIFICATION, 1);
 
         Uri uri = getContentResolver().insert(ToDoContract.ToDoEntry.CONTENT_URI, values);
         if (uri == null) {
@@ -165,6 +166,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
         values.put(ToDoContract.ToDoEntry.COLUMN_MESSAGE, message_string);
         values.put(ToDoContract.ToDoEntry.COLUMN_DATE, date_string);
         values.put(ToDoContract.ToDoEntry.COLUMN_TIME, time_string);
+        values.put(ToDoContract.ToDoEntry.COLUMN_NOTIFICATION, 1);
 
         Integer rowsAffected = getContentResolver().update(mCurrentToDoUri, values, null, null);
         if (rowsAffected == null) {

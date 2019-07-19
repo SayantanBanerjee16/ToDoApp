@@ -15,6 +15,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,8 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static final int TODO_LOADER = 1;
     private Uri mCurrentToDoUri;
+    Switch nSwitch;
+
     TextView heading;
     TextView message;
     TextView date;
@@ -90,6 +93,7 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
         message = (TextView) findViewById(R.id.message_ToDo);
         date = (TextView) findViewById(R.id.date_ToDo);
         time = (TextView) findViewById(R.id.time_ToDo);
+        nSwitch = (Switch) findViewById(R.id.notificationSwitch);
 
 
         Intent intent = getIntent();
@@ -122,17 +126,26 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
             int messageColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_MESSAGE);
             int dateColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_DATE);
             int timeColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_TIME);
+            int notificationColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_TIME);
 
             int id_todo = cursor.getInt(idColumnIndex);
             String heading_todo = cursor.getString(headingColumnIndex);
             String message_todo = cursor.getString(messageColumnIndex);
             String date_todo = cursor.getString(dateColumnIndex);
             String time_todo = cursor.getString(timeColumnIndex);
+            int notification_todo = cursor.getInt(notificationColumnIndex);
 
             heading.setText(heading_todo);
             message.setText(message_todo);
             date.setText(date_todo);
             time.setText(time_todo);
+
+            if(notification_todo == 1){
+                nSwitch.setChecked(true);
+            }else
+            {
+                nSwitch.setChecked(false);
+            }
         }
     }
 

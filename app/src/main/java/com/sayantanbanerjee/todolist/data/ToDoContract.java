@@ -39,6 +39,8 @@ public final class ToDoContract {
         public static final String COLUMN_MESSAGE = "message";
         public static final String COLUMN_DATE = "date";
         public static final String COLUMN_TIME = "time";
+        public static final String COLUMN_NOTIFICATION = "notification";
+
 
     }
 }

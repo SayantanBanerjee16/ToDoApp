@@ -24,7 +24,8 @@ public class ToDoDbHelper extends SQLiteOpenHelper {
                 + ToDoEntry.COLUMN_HEADING + " TEXT NOT NULL, "
                 + ToDoEntry.COLUMN_MESSAGE + " TEXT NOT NULL, "
                 + ToDoEntry.COLUMN_DATE + " TEXT NOT NULL, "
-                + ToDoEntry.COLUMN_TIME + " TEXT NOT NULL);";
+                + ToDoEntry.COLUMN_TIME + " TEXT NOT NULL, "
+                + ToDoEntry.COLUMN_NOTIFICATION + " INTEGER NOT NULL);";
         db.execSQL(SQL_CREATE_PETS_TABLE);
     }
 

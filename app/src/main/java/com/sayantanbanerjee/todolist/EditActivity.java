@@ -7,10 +7,14 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -50,6 +54,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
 
     Uri mCurrentToDoUri;
 
+    int id_todo;
     int MONTH;
     int DAY;
     int YEAR;
@@ -59,6 +64,25 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
     private static final int TODO_LOADER = 1;
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
+
+    private void Notification(){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent notificationIntent;
+        notificationIntent = new Intent(this, NotificationReceiver.class);
+        notificationIntent.putExtra("ID",id_todo);
+        notificationIntent.putExtra("Title",heading_string);
+        notificationIntent.putExtra("Message",message_string);
+        notificationIntent.putExtra("SwitchChecked",1);
+        PendingIntent broadcast = PendingIntent.getBroadcast(this, id_todo, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH,DAY);
+        cal.set(Calendar.MONTH,MONTH);
+        cal.set(Calendar.YEAR,YEAR);
+        cal.set(Calendar.HOUR_OF_DAY,HOUR);
+        cal.set(Calendar.MINUTE,MINUTE);
+        cal.set(Calendar.SECOND, 0);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
+    }
 
 
     private void deleteToDo() {
@@ -148,10 +172,13 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
         values.put(ToDoContract.ToDoEntry.COLUMN_NOTIFICATION, 1);
 
         Uri uri = getContentResolver().insert(ToDoContract.ToDoEntry.CONTENT_URI, values);
+
         if (uri == null) {
             Toast.makeText(this, "Error with inserting To Do",
                     Toast.LENGTH_SHORT).show();
         } else {
+            long id_uri = ContentUris.parseId(uri);
+            id_todo = (int) id_uri;
             Toast.makeText(this, "To Do Saved",
                     Toast.LENGTH_SHORT).show();
         }
@@ -263,6 +290,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
                     } else {
                         updateIntoDatabase();
                     }
+                    Notification();
                     //exit activity
                     finish();
                 }
@@ -348,6 +376,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] projection = {
+                ToDoContract.ToDoEntry._ID,
                 ToDoContract.ToDoEntry.COLUMN_HEADING,
                 ToDoContract.ToDoEntry.COLUMN_MESSAGE,
                 ToDoContract.ToDoEntry.COLUMN_DATE,
@@ -362,11 +391,13 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
             return;
         }
         if (cursor.moveToFirst()) {
+            int idColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry._ID);
             int headingColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_HEADING);
             int messageColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_MESSAGE);
             int dateColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_DATE);
             int timeColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_TIME);
 
+            id_todo = cursor.getInt(idColumnIndex);
             heading_string = cursor.getString(headingColumnIndex);
             message_string = cursor.getString(messageColumnIndex);
             date_string = cursor.getString(dateColumnIndex);

@@ -8,18 +8,27 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sayantanbanerjee.todolist.data.ToDoContract;
+
+import java.util.Calendar;
 
 public class ToDoActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -32,11 +41,39 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
     TextView date;
     TextView time;
 
+    String heading_todo;
+    String message_todo;
+    String date_todo;
+    String time_todo;
+    int id_todo;
+    int notification_todo;
+
     int MONTH;
     int DAY;
     int YEAR;
     int HOUR;
     int MINUTE;
+
+    int isSwitchChecked;
+
+    private void Notification(){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent notificationIntent;
+        notificationIntent = new Intent(this, NotificationReceiver.class);
+        notificationIntent.putExtra("ID",id_todo);
+        notificationIntent.putExtra("Title",heading_todo);
+        notificationIntent.putExtra("Message",message_todo);
+        notificationIntent.putExtra("SwitchChecked",isSwitchChecked);
+        PendingIntent broadcast = PendingIntent.getBroadcast(this, id_todo, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH,DAY);
+        cal.set(Calendar.MONTH,MONTH);
+        cal.set(Calendar.YEAR,YEAR);
+        cal.set(Calendar.HOUR_OF_DAY,HOUR);
+        cal.set(Calendar.MINUTE,MINUTE);
+        cal.set(Calendar.SECOND, 0);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
+    }
 
 
     public void back(View view) {
@@ -89,6 +126,18 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
         showDeleteConfirmationDialog();
     }
 
+    public void updateIntoDatabase() {
+
+        ContentValues values = new ContentValues();
+        values.put(ToDoContract.ToDoEntry.COLUMN_HEADING, heading_todo);
+        values.put(ToDoContract.ToDoEntry.COLUMN_MESSAGE, message_todo);
+        values.put(ToDoContract.ToDoEntry.COLUMN_DATE, date_todo);
+        values.put(ToDoContract.ToDoEntry.COLUMN_TIME, time_todo);
+        values.put(ToDoContract.ToDoEntry.COLUMN_NOTIFICATION, isSwitchChecked);
+
+        Integer rowsAffected = getContentResolver().update(mCurrentToDoUri, values, null, null);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +155,28 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
         mCurrentToDoUri = intent.getData();
 
         getSupportLoaderManager().initLoader(TODO_LOADER, null, this);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        nSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    Log.i("IF: ", Boolean.toString(isChecked));
+                    isSwitchChecked = 1;
+                    updateIntoDatabase();
+                    Notification();
+                } else {
+                    Log.i("ELSE: ", Boolean.toString(isChecked));
+                    isSwitchChecked = 0;
+                    updateIntoDatabase();
+                    Notification();
+                }
+            }
+        });
     }
 
     @Override
@@ -115,7 +186,8 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
                 ToDoContract.ToDoEntry.COLUMN_HEADING,
                 ToDoContract.ToDoEntry.COLUMN_MESSAGE,
                 ToDoContract.ToDoEntry.COLUMN_DATE,
-                ToDoContract.ToDoEntry.COLUMN_TIME};
+                ToDoContract.ToDoEntry.COLUMN_TIME,
+                ToDoContract.ToDoEntry.COLUMN_NOTIFICATION};
 
         return new CursorLoader(this, mCurrentToDoUri, projection, null, null, null);
     }
@@ -132,14 +204,14 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
             int messageColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_MESSAGE);
             int dateColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_DATE);
             int timeColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_TIME);
-            int notificationColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_TIME);
+            int notificationColumnIndex = cursor.getColumnIndex(ToDoContract.ToDoEntry.COLUMN_NOTIFICATION);
 
-            int id_todo = cursor.getInt(idColumnIndex);
-            String heading_todo = cursor.getString(headingColumnIndex);
-            String message_todo = cursor.getString(messageColumnIndex);
-            String date_todo = cursor.getString(dateColumnIndex);
-            String time_todo = cursor.getString(timeColumnIndex);
-            int notification_todo = cursor.getInt(notificationColumnIndex);
+            id_todo = cursor.getInt(idColumnIndex);
+            heading_todo = cursor.getString(headingColumnIndex);
+            message_todo = cursor.getString(messageColumnIndex);
+            date_todo = cursor.getString(dateColumnIndex);
+            time_todo = cursor.getString(timeColumnIndex);
+            notification_todo = cursor.getInt(notificationColumnIndex);
 
             String day_string = Character.toString(date_todo.charAt(0)) + Character.toString(date_todo.charAt(1));
             String month_string = Character.toString(date_todo.charAt(5)) + Character.toString(date_todo.charAt(6));
@@ -179,12 +251,14 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
             date.setText(date_todo);
             time.setText(time_todo);
 
-            if(notification_todo == 1){
+            if (notification_todo == 1) {
                 nSwitch.setChecked(true);
-            }else
-            {
+                isSwitchChecked = 1;
+            } else {
                 nSwitch.setChecked(false);
+                isSwitchChecked = 0;
             }
+            Log.i("LOAD FINISHED", Integer.toString(isSwitchChecked));
         }
     }
 

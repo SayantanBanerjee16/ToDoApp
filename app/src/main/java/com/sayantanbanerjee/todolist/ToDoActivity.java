@@ -57,6 +57,12 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
 
     int isSwitchChecked;
 
+    boolean firstTimeFlag;
+
+    AlarmManager alarmManager;
+    PendingIntent broadcast;
+    Intent notificationIntent;
+
     private void updateIntoDatabaseNotification() {
         ContentValues values = new ContentValues();
         values.put(ToDoContract.ToDoEntry.COLUMN_NOTIFICATION, 2);
@@ -64,15 +70,14 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void Notification() {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent notificationIntent;
+        Log.i("NOTIFICATION", " CREATED");
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         notificationIntent = new Intent(this, NotificationReceiver.class);
         notificationIntent.putExtra("ID", id_todo);
         notificationIntent.putExtra("Title", heading_todo);
         notificationIntent.putExtra("Message", message_todo);
         notificationIntent.putExtra("SwitchChecked", isSwitchChecked);
-        notificationIntent.setData(mCurrentToDoUri);
-        PendingIntent broadcast = PendingIntent.getBroadcast(this, id_todo, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        broadcast = PendingIntent.getBroadcast(this, id_todo, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_MONTH, DAY);
         cal.set(Calendar.MONTH, MONTH - 1);
@@ -83,6 +88,15 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
     }
 
+    private void cancelNotification() {
+        if (broadcast != null) {
+            Log.i("NOTIFICATION", " CANCELLED");
+            alarmManager.cancel(broadcast);
+            broadcast = null;
+        }
+
+    }
+
 
     public void back(View view) {
         NavUtils.navigateUpFromSameTask(ToDoActivity.this);
@@ -91,7 +105,9 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
     public void edit(View view) {
         Intent intent = new Intent(ToDoActivity.this, EditActivity.class);
         intent.setData(mCurrentToDoUri);
+        cancelNotification();
         startActivity(intent);
+        this.finish();
     }
 
     private void deleteToDo() {
@@ -162,31 +178,34 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
         Intent intent = getIntent();
         mCurrentToDoUri = intent.getData();
 
-        if(mCurrentToDoUri == null){
-            int position_ID = intent.getIntExtra("ID",0);
+        if (mCurrentToDoUri == null) {
+            int position_ID = intent.getIntExtra("ID", 0);
             mCurrentToDoUri = ContentUris.withAppendedId(ToDoContract.ToDoEntry.CONTENT_URI, position_ID);
         }
 
         getSupportLoaderManager().initLoader(TODO_LOADER, null, this);
-
+        firstTimeFlag = true;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         nSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    Log.i("IF: ", Boolean.toString(isChecked));
-                    isSwitchChecked = 1;
-                    updateIntoDatabase();
-                    Notification();
-                } else {
-                    Log.i("ELSE: ", Boolean.toString(isChecked));
-                    isSwitchChecked = 0;
-                    updateIntoDatabase();
-                    Notification();
+                if (!firstTimeFlag) {
+                    if (isChecked) {
+                        Log.i("IF: ", Boolean.toString(isChecked));
+                        isSwitchChecked = 1;
+                        updateIntoDatabase();
+                        Notification();
+                    } else {
+                        Log.i("ELSE: ", Boolean.toString(isChecked));
+                        isSwitchChecked = 0;
+                        updateIntoDatabase();
+                        cancelNotification();
+                    }
                 }
             }
         });
@@ -311,16 +330,19 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
                     nSwitch.setChecked(true);
                     isSwitchChecked = 1;
                     NotificationText.setText("Tap to disable Notification");
+                    Log.i("DOWN", "IF");
                 } else {
                     nSwitch.setChecked(false);
                     isSwitchChecked = 0;
                     NotificationText.setText("Tap to enable Notification");
+                    Log.i("DOWN", "ELSE");
                 }
                 Log.i("LOAD FINISHED", Integer.toString(isSwitchChecked));
             }
 
-
+            firstTimeFlag = false;
         }
+
     }
 
     @Override

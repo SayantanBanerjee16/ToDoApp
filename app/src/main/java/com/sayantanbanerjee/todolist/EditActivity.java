@@ -63,27 +63,9 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
 
     private static final int TODO_LOADER = 1;
 
+
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
-    private void Notification(){
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent notificationIntent;
-        notificationIntent = new Intent(this, NotificationReceiver.class);
-        notificationIntent.putExtra("ID",id_todo);
-        notificationIntent.putExtra("Title",heading_string);
-        notificationIntent.putExtra("Message",message_string);
-        notificationIntent.putExtra("SwitchChecked",1);
-        PendingIntent broadcast = PendingIntent.getBroadcast(this, id_todo, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.DAY_OF_MONTH,DAY);
-        cal.set(Calendar.MONTH,MONTH - 1);
-        cal.set(Calendar.YEAR,YEAR);
-        cal.set(Calendar.HOUR_OF_DAY,HOUR);
-        cal.set(Calendar.MINUTE,MINUTE);
-        cal.set(Calendar.SECOND, 0);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
-
-    }
 
 
     private void deleteToDo() {
@@ -161,7 +143,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
         timePicker.show(getSupportFragmentManager(), "time picker");
     }
 
-    public void insertIntoDatabase() {
+    public int insertIntoDatabase() {
         date_string = date_string.trim();
         time_string = time_string.trim();
 
@@ -170,9 +152,13 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
         values.put(ToDoContract.ToDoEntry.COLUMN_MESSAGE, message_string);
         values.put(ToDoContract.ToDoEntry.COLUMN_DATE, date_string);
         values.put(ToDoContract.ToDoEntry.COLUMN_TIME, time_string);
-        values.put(ToDoContract.ToDoEntry.COLUMN_NOTIFICATION, 1);
+        values.put(ToDoContract.ToDoEntry.COLUMN_NOTIFICATION, 0);
 
         Uri uri = getContentResolver().insert(ToDoContract.ToDoEntry.CONTENT_URI, values);
+
+        long id = Long.parseLong(uri.getLastPathSegment());
+
+        int ID = (int) id;
 
         if (uri == null) {
             Toast.makeText(this, "Error with inserting To Do",
@@ -183,6 +169,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
             Toast.makeText(this, "To Do Saved",
                     Toast.LENGTH_SHORT).show();
         }
+        return ID;
     }
 
     public void updateIntoDatabase() {
@@ -194,7 +181,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
         values.put(ToDoContract.ToDoEntry.COLUMN_MESSAGE, message_string);
         values.put(ToDoContract.ToDoEntry.COLUMN_DATE, date_string);
         values.put(ToDoContract.ToDoEntry.COLUMN_TIME, time_string);
-        values.put(ToDoContract.ToDoEntry.COLUMN_NOTIFICATION, 1);
+        values.put(ToDoContract.ToDoEntry.COLUMN_NOTIFICATION, 0);
 
         Integer rowsAffected = getContentResolver().update(mCurrentToDoUri, values, null, null);
         if (rowsAffected == null) {
@@ -287,11 +274,14 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
                 } else {
 
                     if (mCurrentToDoUri == null) {
-                        insertIntoDatabase();
+                        int ID = insertIntoDatabase();
+                        Intent intent = new Intent(EditActivity.this, ToDoActivity.class);
+                        Uri currentToDoUri = ContentUris.withAppendedId(ToDoContract.ToDoEntry.CONTENT_URI, ID);
+                        intent.setData(currentToDoUri);
+                        startActivity(intent);
                     } else {
                         updateIntoDatabase();
                     }
-                    Notification();
                     //exit activity
                     finish();
                 }

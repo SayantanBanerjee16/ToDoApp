@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.app.INotificationSideChannel;
 import android.util.Log;
 
 import java.util.List;
@@ -27,13 +28,11 @@ public class NotificationReceiver extends BroadcastReceiver {
         int active;
         String title;
         String message;
-        Uri mCurrentToDo;
 
         ID = intent.getIntExtra("ID", 0);
         title = intent.getStringExtra("Title");
         message = intent.getStringExtra("Message");
         active = intent.getIntExtra("SwitchChecked", 2);
-        mCurrentToDo = intent.getData();
 
         if (ID != 0) {
             Intent notificationIntent = new Intent(context, ToDoActivity.class);
@@ -72,7 +71,9 @@ public class NotificationReceiver extends BroadcastReceiver {
 
             notificationManager.notify(ID, notification);
 
-            if (active == 0) {
+            Log.i("NOTIFICATION RECIEVER  ", Integer.toString(active));
+
+            if (active == 0 || active == 2) {
                 notificationManager.cancel(ID);
             }
         }

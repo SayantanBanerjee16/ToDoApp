@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/deletePast"
+        android:title="Delete past ToDo"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/todayToDo"
+        android:title="Show Today's ToDo"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/allToDo"
+        android:title="Show All ToDo's"
+        app:showAsAction="never" />
+</menu>

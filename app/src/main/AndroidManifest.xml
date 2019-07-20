@@ -29,7 +29,8 @@
         </activity>
         <activity
             android:name=".ListActivity"
-            android:theme="@style/ListTheme" />
+            android:theme="@style/ListTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">

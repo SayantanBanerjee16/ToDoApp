@@ -14,23 +14,31 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.sayantanbanerjee.todolist.data.ToDoContract;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final int TODO_LOADER = 1;
+    private static final int TODO_LOADER_ALL = 1;
+    private static final int TODO_LOADER_TODAY = 2;
     ToDoCursorAdapter mCursorAdapter;
 
     View view;
     ListView listView;
+    Boolean today;
+    TextView textEmptySubtitle;
 
     private void deletePastToDo() {
 
@@ -72,13 +80,17 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        getSupportActionBar().setTitle("Your To-Do's");
+        getSupportActionBar().setTitle("Your's All To-Do");
+
+        today = false;
 
         view = (View) findViewById(R.id.empty_view);
         listView = (ListView) findViewById(R.id.list);
         listView.setEmptyView(view);
 
-        mCursorAdapter = new ToDoCursorAdapter(this,null);
+        textEmptySubtitle = (TextView) findViewById(R.id.empty_subtitle_text);
+
+        mCursorAdapter = new ToDoCursorAdapter(this, null);
         listView.setAdapter(mCursorAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -100,7 +112,7 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
-        getSupportLoaderManager().initLoader(TODO_LOADER, null, this);
+        getSupportLoaderManager().initLoader(TODO_LOADER_ALL, null, this);
 
     }
 
@@ -120,16 +132,38 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
                 return true;
 
             case R.id.todayToDo:
-
+                getSupportActionBar().setTitle("Today's To-Do");
+                mCursorAdapter.swapCursor(null);
+                today = true;
+                textEmptySubtitle.setText("Add a To-Do of current date (Today) to get Visible here");
+                getSupportLoaderManager().initLoader(TODO_LOADER_TODAY, null, this);
                 return true;
 
             case R.id.allToDo:
-                getSupportLoaderManager().initLoader(TODO_LOADER, null, this);
+                getSupportActionBar().setTitle("Your's All To-Do");
+                mCursorAdapter.swapCursor(null);
+                today = false;
+                textEmptySubtitle.setText("Get started by Adding a To-Do");
+                getSupportLoaderManager().initLoader(TODO_LOADER_ALL, null, this);
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem menu_today = menu.findItem(R.id.todayToDo);
+        MenuItem menu_all = menu.findItem(R.id.allToDo);
+        if (today) {
+            menu_all.setEnabled(true);
+            menu_today.setEnabled(false);
+        } else {
+            menu_all.setEnabled(false);
+            menu_today.setEnabled(true);
+        }
+        return true;
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -139,8 +173,22 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
                 ToDoContract.ToDoEntry.COLUMN_DATE,
                 ToDoContract.ToDoEntry.COLUMN_TIME,
                 ToDoContract.ToDoEntry.COLUMN_NOTIFICATION};
+        switch (id) {
+            case TODO_LOADER_ALL:
+                return new CursorLoader(this, ToDoContract.ToDoEntry.CONTENT_URI, projection, null, null, null);
 
-        return new CursorLoader(this, ToDoContract.ToDoEntry.CONTENT_URI,projection,null,null,null);
+            case TODO_LOADER_TODAY:
+                Date dateObject = new Date();
+                SimpleDateFormat dateFormatter = new SimpleDateFormat("dd / MM / YYYY");
+                String current_date_string = dateFormatter.format(dateObject);
+                String selection = ToDoContract.ToDoEntry.COLUMN_DATE + " =? ";
+                String[] selectionArgs = new String[]{ current_date_string };
+                Log.i("Current date",current_date_string);
+                return new CursorLoader(this, ToDoContract.ToDoEntry.CONTENT_URI, projection, selection, selectionArgs, null);
+            default:
+                return null;
+        }
+
     }
 
     @Override

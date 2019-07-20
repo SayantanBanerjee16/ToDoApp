@@ -112,6 +112,7 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void deleteToDo() {
         int rowsDeleted = getContentResolver().delete(mCurrentToDoUri, null, null);
+        cancelNotification();
         if (rowsDeleted == 0) {
             Toast.makeText(this, "Error with deleting To Do",
                     Toast.LENGTH_SHORT).show();

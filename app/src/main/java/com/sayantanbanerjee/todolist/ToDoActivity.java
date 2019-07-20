@@ -306,13 +306,18 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
                     Date date_compare = dateFormatter.parse(date_todo);
                     Date time_compare = timeFormatter.parse(time_todo);
 
-                    Log.i("date compare", date_compare.toString());
-                    Log.i("date current", date_current.toString());
-                    Log.i("time compare", time_compare.toString());
-                    Log.i("time current", time_current.toString());
+                    Log.i("date compare", date_todo);
+                    Log.i("date current", current_date_string);
+                    Log.i("time compare", time_todo);
+                    Log.i("time current", current_time_string);
 
-                    if (date_current.after(date_compare) || date_current.equals(date_compare)) {
-                        if (time_current.after(time_compare) || time_current.equals(time_compare)) {
+                    Log.i("date compare", String.valueOf(date_compare));
+                    Log.i("date current", String.valueOf(date_current));
+                    Log.i("time compare", String.valueOf(time_compare));
+                    Log.i("time current", String.valueOf(time_current));
+
+                    if (date_current.compareTo(date_compare) >= 0) {
+                        if (time_current.compareTo(time_compare) >= 0) {
                             updateIntoDatabaseNotification();
                             notification_todo = 2;
                         }

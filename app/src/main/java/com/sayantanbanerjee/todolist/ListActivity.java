@@ -6,7 +6,9 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
+import android.app.AlertDialog;
 import android.content.ContentUris;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -29,6 +31,42 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
 
     View view;
     ListView listView;
+
+    private void deletePastToDo() {
+
+        String where = "notification = 2";
+        int rowsDeleted = (int) getContentResolver().delete(ToDoContract.ToDoEntry.CONTENT_URI, where, null);
+        if (rowsDeleted == 0) {
+            Toast.makeText(this, "Error with deleting To Do",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Deletion of " + Integer.toString(rowsDeleted) + " To Do Successfully",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void showDeleteConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure, you want to delete it?");
+        builder.setCancelable(false);
+        builder.setTitle("DELETE");
+        builder.setIcon(android.R.drawable.ic_menu_delete);
+        builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                deletePastToDo();
+            }
+        });
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +104,7 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_listactivity, menu);
@@ -77,7 +116,7 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
 
         switch (item.getItemId()) {
             case R.id.deletePast:
-                
+                showDeleteConfirmationDialog();
                 return true;
 
             case R.id.todayToDo:
@@ -85,7 +124,7 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
                 return true;
 
             case R.id.allToDo:
-
+                getSupportLoaderManager().initLoader(TODO_LOADER, null, this);
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -25,9 +25,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -66,10 +68,15 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
+    private void Keyboard_management() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+    }
 
 
     private void deleteToDo() {
         int rowsDeleted = getContentResolver().delete(mCurrentToDoUri, null, null);
+        Keyboard_management();
         if (rowsDeleted == 0) {
             Toast.makeText(this, "Error with deleting To Do",
                     Toast.LENGTH_SHORT).show();
@@ -77,8 +84,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
             Toast.makeText(this, "Deletion of To Do Successfully",
                     Toast.LENGTH_SHORT).show();
         }
-
-        Intent intent = new Intent(EditActivity.this,ListActivity.class);
+        Intent intent = new Intent(EditActivity.this, ListActivity.class);
         startActivity(intent);
         this.finish();
 
@@ -272,7 +278,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
                 if (TextUtils.isEmpty(heading_string) || TextUtils.isEmpty(message_string) || TextUtils.isEmpty(time_string) || TextUtils.isEmpty(date_string)) {
                     Toast.makeText(EditActivity.this, "No Field Should remain empty!", Toast.LENGTH_LONG).show();
                 } else {
-
+                    Keyboard_management();
                     if (mCurrentToDoUri == null) {
                         int ID = insertIntoDatabase();
                         Intent intent = new Intent(EditActivity.this, ToDoActivity.class);
@@ -280,7 +286,11 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
                         intent.setData(currentToDoUri);
                         startActivity(intent);
                     } else {
+
                         updateIntoDatabase();
+                        Intent intent = new Intent(EditActivity.this, ToDoActivity.class);
+                        intent.setData(mCurrentToDoUri);
+                        startActivity(intent);
                     }
                     //exit activity
                     finish();
@@ -288,10 +298,12 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
                 return true;
 
             case R.id.delete:
+                Keyboard_management();
                 showDeleteConfirmationDialog();
                 return true;
 
             case android.R.id.home:
+                Keyboard_management();
                 NavUtils.navigateUpFromSameTask(EditActivity.this);
                 return true;
         }

@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -64,9 +65,46 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
     int MINUTE;
 
     private static final int TODO_LOADER = 1;
+    private boolean mToDoHasChanged = false;
+
+    private void showUnsavedChangesDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Discard your changes and quit Editing?");
+        builder.setPositiveButton("DISCARD", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (mCurrentToDoUri == null) {
+                    NavUtils.navigateUpFromSameTask(EditActivity.this);
+                } else {
+                    Intent intent = new Intent(EditActivity.this, ToDoActivity.class);
+                    intent.setData(mCurrentToDoUri);
+                    startActivity(intent);
+                }
+                finish();
+
+            }
+        });
+        builder.setNegativeButton("KEEP EDITING", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
+
+    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            mToDoHasChanged = true;
+            return false;
+        }
+    };
 
     private void Keyboard_management() {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -212,6 +250,11 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
         Intent intent = getIntent();
         mCurrentToDoUri = intent.getData();
 
+        time.setOnTouchListener(mTouchListener);
+        date.setOnTouchListener(mTouchListener);
+        heading.setOnTouchListener(mTouchListener);
+        message.setOnTouchListener(mTouchListener);
+
         if (mCurrentToDoUri == null) {
             getSupportActionBar().setTitle("Add To-Do");
 
@@ -304,10 +347,45 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
 
             case android.R.id.home:
                 Keyboard_management();
-                NavUtils.navigateUpFromSameTask(EditActivity.this);
+                if (!mToDoHasChanged) {
+                    if (mCurrentToDoUri == null) {
+                        NavUtils.navigateUpFromSameTask(EditActivity.this);
+                    } else {
+                        Intent intent = new Intent(EditActivity.this, ToDoActivity.class);
+                        intent.setData(mCurrentToDoUri);
+                        startActivity(intent);
+                    }
+                    finish();
+                } else {
+                    showUnsavedChangesDialog();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
+
+    }
+
+    @Override
+    public void onBackPressed() {
+//        if (!mToDoHasChanged) {
+//            super.onBackPressed();
+//            return;
+//        }
+        if (!mToDoHasChanged) {
+            if (mCurrentToDoUri == null) {
+                super.onBackPressed();
+                return;
+            } else {
+                Intent intent = new Intent(EditActivity.this, ToDoActivity.class);
+                intent.setData(mCurrentToDoUri);
+                startActivity(intent);
+                finish();
+            }
+
+        }else{
+            showUnsavedChangesDialog();
+        }
+
     }
 
     @Override

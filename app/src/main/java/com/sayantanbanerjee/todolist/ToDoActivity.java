@@ -63,9 +63,9 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
     PendingIntent broadcast;
     Intent notificationIntent;
 
-    private void updateIntoDatabaseNotification() {
+    private void updateIntoDatabaseNotification(int i) {
         ContentValues values = new ContentValues();
-        values.put(ToDoContract.ToDoEntry.COLUMN_NOTIFICATION, 2);
+        values.put(ToDoContract.ToDoEntry.COLUMN_NOTIFICATION, i);
         getContentResolver().update(mCurrentToDoUri, values, null, null);
     }
 
@@ -106,6 +106,7 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
         Intent intent = new Intent(ToDoActivity.this, EditActivity.class);
         intent.setData(mCurrentToDoUri);
         cancelNotification();
+        updateIntoDatabaseNotification(0);
         startActivity(intent);
         this.finish();
     }
@@ -318,7 +319,7 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
 
                     if (date_current.compareTo(date_compare) >= 0) {
                         if (time_current.compareTo(time_compare) >= 0) {
-                            updateIntoDatabaseNotification();
+                            updateIntoDatabaseNotification(2);
                             notification_todo = 2;
                         }
                     }

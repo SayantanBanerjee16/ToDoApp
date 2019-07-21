@@ -367,10 +367,6 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
 
     @Override
     public void onBackPressed() {
-//        if (!mToDoHasChanged) {
-//            super.onBackPressed();
-//            return;
-//        }
         if (!mToDoHasChanged) {
             if (mCurrentToDoUri == null) {
                 super.onBackPressed();

@@ -45,7 +45,7 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
         String where = "notification = 2";
         int rowsDeleted = (int) getContentResolver().delete(ToDoContract.ToDoEntry.CONTENT_URI, where, null);
         if (rowsDeleted == 0) {
-            Toast.makeText(this, "Error with deleting To Do",
+            Toast.makeText(this, "There isn't any Past ToDo to be deleted!",
                     Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Deletion of " + Integer.toString(rowsDeleted) + " To Do Successfully",
@@ -56,7 +56,7 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void showDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure, you want to delete it?");
+        builder.setMessage("Are you sure, you want to delete ALL Past ToDo?");
         builder.setCancelable(false);
         builder.setTitle("DELETE");
         builder.setIcon(android.R.drawable.ic_menu_delete);

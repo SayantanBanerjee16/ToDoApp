@@ -55,6 +55,13 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
     int HOUR;
     int MINUTE;
 
+    int MONTH_CURRENT;
+    int DAY_CURRENT;
+    int YEAR_CURRENT;
+    int HOUR_CURRENT;
+    int MINUTE_CURRENT;
+
+
     int isSwitchChecked;
 
     boolean firstTimeFlag;
@@ -300,27 +307,57 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
                     }
 
                     String current_date_string = dateFormatter.format(dateObject);
-                    Date date_current = dateFormatter.parse(current_date_string);
                     String current_time_string = timeFormatter.format(dateObject);
-                    Date time_current = timeFormatter.parse(current_time_string);
 
-                    Date date_compare = dateFormatter.parse(date_todo);
-                    Date time_compare = timeFormatter.parse(time_todo);
+                    if (current_time_string.length() == 9) {
+                        current_time_string = "0" + current_time_string;
+                    }
 
-                    Log.i("date compare", date_todo);
-                    Log.i("date current", current_date_string);
-                    Log.i("time compare", time_todo);
-                    Log.i("time current", current_time_string);
+                    String day_string1 = Character.toString(current_date_string.charAt(0)) + Character.toString(current_date_string.charAt(1));
+                    String month_string1 = Character.toString(current_date_string.charAt(5)) + Character.toString(current_date_string.charAt(6));
+                    String year_string1 = Character.toString(current_date_string.charAt(10)) + Character.toString(current_date_string.charAt(11)) +
+                            Character.toString(current_date_string.charAt(12)) + Character.toString(current_date_string.charAt(13));
 
-                    Log.i("date compare", String.valueOf(date_compare));
-                    Log.i("date current", String.valueOf(date_current));
-                    Log.i("time compare", String.valueOf(time_compare));
-                    Log.i("time current", String.valueOf(time_current));
+                    DAY_CURRENT = Integer.parseInt(day_string1);
+                    MONTH_CURRENT = Integer.parseInt(month_string1);
+                    YEAR_CURRENT = Integer.parseInt(year_string1);
 
-                    if (date_current.compareTo(date_compare) >= 0) {
-                        if (time_current.compareTo(time_compare) >= 0) {
-                            updateIntoDatabaseNotification(2);
-                            notification_todo = 2;
+                    String minute_string1 = Character.toString(current_time_string.charAt(5)) + Character.toString(current_time_string.charAt(6));
+                    MINUTE_CURRENT = Integer.parseInt(minute_string1);
+
+                    String HOUR_CURRENT_string = Character.toString(current_time_string.charAt(0)) + Character.toString(current_time_string.charAt(1));
+                    int HOUR_CURRENT_TEMP = Integer.parseInt(HOUR_CURRENT_string);
+
+                    if (current_time_string.length() == 10) {
+                        if (current_time_string.charAt(8) == 'a' && current_time_string.charAt(8) == 'm') {
+                            if (HOUR_CURRENT_TEMP == 12) {
+                                HOUR_CURRENT = 0;
+                            } else {
+                                HOUR_CURRENT = HOUR_CURRENT_TEMP;
+                            }
+                        } else {
+                            if (HOUR_CURRENT_TEMP == 12) {
+                                HOUR_CURRENT = 12;
+                            } else {
+                                HOUR_CURRENT = HOUR_CURRENT_TEMP + 12;
+                            }
+                        }
+                    } else {
+                        HOUR_CURRENT = HOUR_CURRENT_TEMP;
+                    }
+                    
+
+                    if(YEAR <= YEAR_CURRENT){
+                        if(MONTH <= MONTH_CURRENT){
+                            if(DAY <= DAY_CURRENT){
+                                if(HOUR <= HOUR_CURRENT){
+                                    if(MINUTE <= MINUTE_CURRENT){
+                                        updateIntoDatabaseNotification(2);
+                                        notification_todo = 2;
+                                        Log.i("POINTER: " , "INSIDE IF");
+                                    }
+                                }
+                            }
                         }
                     }
 

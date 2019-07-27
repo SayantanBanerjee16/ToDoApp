@@ -1,19 +1,19 @@
 package com.sayantanbanerjee.todolist;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NavUtils;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
 import android.app.AlertDialog;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,11 +34,14 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int TODO_LOADER_ALL = 1;
     private static final int TODO_LOADER_TODAY = 2;
     ToDoCursorAdapter mCursorAdapter;
+    SharedPreferences sharedPreferences;
 
     View view;
     ListView listView;
     Boolean today;
     TextView textEmptySubtitle;
+
+    String firstTime;
 
     private void deletePastToDo() {
 
@@ -82,7 +85,13 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_list);
         getSupportActionBar().setTitle("Your's All To-Do");
 
-        today = false;
+        sharedPreferences = this.getSharedPreferences("com.sayantanbanerjee.todolist", Context.MODE_PRIVATE);
+        firstTime = sharedPreferences.getString("firstTime","");
+        if(firstTime.equals("")){
+            sharedPreferences.edit().putString("firstTime", "all").apply();
+        }
+
+        Log.i("onCreate(): firstTime",firstTime);
 
         view = (View) findViewById(R.id.empty_view);
         listView = (ListView) findViewById(R.id.list);
@@ -112,10 +121,29 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
-        getSupportLoaderManager().initLoader(TODO_LOADER_ALL, null, this);
-
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCursorAdapter.swapCursor(null);
+
+        Log.i("onResume(): firstTime",firstTime);
+        if(firstTime.equals("all")){
+            Log.i("onResume()", "INSIDE IF");
+            getSupportActionBar().setTitle("Your's All To-Do");
+            today = false;
+            textEmptySubtitle.setText("Get started by Adding a To-Do");
+            sharedPreferences.edit().putString("firstTime", "all").apply();
+            getSupportLoaderManager().initLoader(TODO_LOADER_ALL, null, this);
+        }else{
+            getSupportActionBar().setTitle("Today's To-Do");
+            today = true;
+            sharedPreferences.edit().putString("firstTime", "today").apply();
+            textEmptySubtitle.setText("Add a To-Do of current date (Today) to get Visible here");
+            getSupportLoaderManager().initLoader(TODO_LOADER_TODAY, null, this);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -134,6 +162,7 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.todayToDo:
                 getSupportActionBar().setTitle("Today's To-Do");
                 mCursorAdapter.swapCursor(null);
+                sharedPreferences.edit().putString("firstTime", "today").apply();
                 today = true;
                 textEmptySubtitle.setText("Add a To-Do of current date (Today) to get Visible here");
                 getSupportLoaderManager().initLoader(TODO_LOADER_TODAY, null, this);
@@ -142,6 +171,7 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.allToDo:
                 getSupportActionBar().setTitle("Your's All To-Do");
                 mCursorAdapter.swapCursor(null);
+                sharedPreferences.edit().putString("firstTime", "all").apply();
                 today = false;
                 textEmptySubtitle.setText("Get started by Adding a To-Do");
                 getSupportLoaderManager().initLoader(TODO_LOADER_ALL, null, this);

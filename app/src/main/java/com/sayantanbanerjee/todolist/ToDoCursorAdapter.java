@@ -159,10 +159,26 @@ public class ToDoCursorAdapter extends CursorAdapter {
                     HOUR_COMPARE = HOUR_COMPARE_TEMP;
                 }
 
-                if(YEAR_COMPARE <= YEAR_CURRENT){
-                    if(MONTH_COMPARE <= MONTH_CURRENT){
-                        if(DAY_COMPARE <= DAY_CURRENT){
-                            if(HOUR_COMPARE <= HOUR_CURRENT){
+                if (YEAR_COMPARE < YEAR_CURRENT) {
+                    updateIntoDatabaseNotification(context);
+                    notification = 2;
+                } else if (YEAR_COMPARE > YEAR_CURRENT) {
+                } else {
+                    if (MONTH_COMPARE < MONTH_CURRENT) {
+                        updateIntoDatabaseNotification(context);
+                        notification = 2;
+                    } else if (MONTH_COMPARE > MONTH_CURRENT) {
+                    } else {
+                        if (DAY_COMPARE < DAY_CURRENT) {
+                            updateIntoDatabaseNotification(context);
+                            notification = 2;
+                        } else if (DAY_COMPARE > DAY_CURRENT) {
+                        } else {
+                            if (HOUR_COMPARE < HOUR_CURRENT) {
+                                updateIntoDatabaseNotification(context);
+                                notification = 2;
+                            } else if (HOUR_COMPARE > HOUR_CURRENT) {
+                            } else {
                                 if(MINUTE_COMPARE <= MINUTE_CURRENT){
                                     updateIntoDatabaseNotification(context);
                                     notification = 2;

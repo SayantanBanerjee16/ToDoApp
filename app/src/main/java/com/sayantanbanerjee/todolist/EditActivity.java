@@ -39,7 +39,9 @@ import android.widget.Toast;
 
 import com.sayantanbanerjee.todolist.data.ToDoContract;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import static java.sql.Types.NULL;
 
@@ -64,8 +66,96 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
     int HOUR;
     int MINUTE;
 
+    int MONTH_CURRENT;
+    int DAY_CURRENT;
+    int YEAR_CURRENT;
+    int HOUR_CURRENT;
+    int MINUTE_CURRENT;
+
     private static final int TODO_LOADER = 1;
     private boolean mToDoHasChanged = false;
+
+    private boolean checkDateAndTime() {
+
+        Date dateObject = new Date();
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd / MM / YYYY");
+        SimpleDateFormat timeFormatter;
+        if (time.length() == 10) {
+            timeFormatter = new SimpleDateFormat("h : mm a");
+        } else {
+            timeFormatter = new SimpleDateFormat("HH : mm");
+        }
+
+        String current_date_string = dateFormatter.format(dateObject);
+        String current_time_string = timeFormatter.format(dateObject);
+
+        if (current_time_string.length() == 9) {
+            current_time_string = "0" + current_time_string;
+        }
+
+        String day_string1 = Character.toString(current_date_string.charAt(0)) + Character.toString(current_date_string.charAt(1));
+        String month_string1 = Character.toString(current_date_string.charAt(5)) + Character.toString(current_date_string.charAt(6));
+        String year_string1 = Character.toString(current_date_string.charAt(10)) + Character.toString(current_date_string.charAt(11)) +
+                Character.toString(current_date_string.charAt(12)) + Character.toString(current_date_string.charAt(13));
+
+        DAY_CURRENT = Integer.parseInt(day_string1);
+        MONTH_CURRENT = Integer.parseInt(month_string1);
+        YEAR_CURRENT = Integer.parseInt(year_string1);
+
+        String minute_string1 = Character.toString(current_time_string.charAt(5)) + Character.toString(current_time_string.charAt(6));
+        MINUTE_CURRENT = Integer.parseInt(minute_string1);
+
+        String HOUR_CURRENT_string = Character.toString(current_time_string.charAt(0)) + Character.toString(current_time_string.charAt(1));
+        int HOUR_CURRENT_TEMP = Integer.parseInt(HOUR_CURRENT_string);
+
+        if (current_time_string.length() == 10) {
+            if (current_time_string.charAt(8) == 'a' && current_time_string.charAt(8) == 'm') {
+                if (HOUR_CURRENT_TEMP == 12) {
+                    HOUR_CURRENT = 0;
+                } else {
+                    HOUR_CURRENT = HOUR_CURRENT_TEMP;
+                }
+            } else {
+                if (HOUR_CURRENT_TEMP == 12) {
+                    HOUR_CURRENT = 12;
+                } else {
+                    HOUR_CURRENT = HOUR_CURRENT_TEMP + 12;
+                }
+            }
+        } else {
+            HOUR_CURRENT = HOUR_CURRENT_TEMP;
+        }
+
+        if (YEAR < YEAR_CURRENT) {
+            return true;
+        } else if (YEAR > YEAR_CURRENT) {
+            return false;
+        } else {
+            if (MONTH < MONTH_CURRENT) {
+                return true;
+            } else if (MONTH > MONTH_CURRENT) {
+                return false;
+            } else {
+                if (DAY < DAY_CURRENT) {
+                    return true;
+                } else if (DAY > DAY_CURRENT) {
+                    return false;
+                } else {
+                    if (HOUR < HOUR_CURRENT) {
+                        return true;
+                    } else if (HOUR > HOUR_CURRENT) {
+                        return false;
+                    } else {
+                        if(MINUTE <= MINUTE_CURRENT){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     private void showUnsavedChangesDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -320,6 +410,9 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
                 heading_string = heading.getText().toString().trim();
                 if (TextUtils.isEmpty(heading_string) || TextUtils.isEmpty(message_string) || TextUtils.isEmpty(time_string) || TextUtils.isEmpty(date_string)) {
                     Toast.makeText(EditActivity.this, "No Field Should remain empty!", Toast.LENGTH_LONG).show();
+                } else if (checkDateAndTime()) {
+                    Keyboard_management();
+                    Toast.makeText(EditActivity.this, "Date and Time are already in Past!", Toast.LENGTH_LONG).show();
                 } else {
                     Keyboard_management();
                     if (mCurrentToDoUri == null) {
@@ -378,7 +471,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
                 finish();
             }
 
-        }else{
+        } else {
             showUnsavedChangesDialog();
         }
 

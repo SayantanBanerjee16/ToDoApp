@@ -345,16 +345,31 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
                     } else {
                         HOUR_CURRENT = HOUR_CURRENT_TEMP;
                     }
-                    
 
-                    if(YEAR <= YEAR_CURRENT){
-                        if(MONTH <= MONTH_CURRENT){
-                            if(DAY <= DAY_CURRENT){
-                                if(HOUR <= HOUR_CURRENT){
+
+                    if (YEAR < YEAR_CURRENT) {
+                        updateIntoDatabaseNotification(2);
+                        notification_todo = 2;
+                    } else if (YEAR > YEAR_CURRENT) {
+                    } else {
+                        if (MONTH < MONTH_CURRENT) {
+                            updateIntoDatabaseNotification(2);
+                            notification_todo = 2;
+                        } else if (MONTH > MONTH_CURRENT) {
+                        } else {
+                            if (DAY < DAY_CURRENT) {
+                                updateIntoDatabaseNotification(2);
+                                notification_todo = 2;
+                            } else if (DAY > DAY_CURRENT) {
+                            } else {
+                                if (HOUR < HOUR_CURRENT) {
+                                    updateIntoDatabaseNotification(2);
+                                    notification_todo = 2;
+                                } else if (HOUR > HOUR_CURRENT) {
+                                } else {
                                     if(MINUTE <= MINUTE_CURRENT){
                                         updateIntoDatabaseNotification(2);
                                         notification_todo = 2;
-                                        Log.i("POINTER: " , "INSIDE IF");
                                     }
                                 }
                             }

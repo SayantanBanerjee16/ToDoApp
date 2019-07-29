@@ -34,7 +34,6 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int TODO_LOADER_ALL = 1;
     private static final int TODO_LOADER_TODAY = 2;
     ToDoCursorAdapter mCursorAdapter;
-    SharedPreferences sharedPreferences;
 
     View view;
     ListView listView;
@@ -54,6 +53,12 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
             Toast.makeText(this, "Deletion of " + Integer.toString(rowsDeleted) + " To Do Successfully",
                     Toast.LENGTH_SHORT).show();
         }
+
+        mCursorAdapter.swapCursor(null);
+        getSupportActionBar().setTitle("Your's All To-Do");
+        today = false;
+        textEmptySubtitle.setText("Get started by Adding a To-Do");
+        getSupportLoaderManager().initLoader(TODO_LOADER_ALL, null, this);
 
     }
 
@@ -84,14 +89,6 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         getSupportActionBar().setTitle("Your's All To-Do");
-
-        sharedPreferences = this.getSharedPreferences("com.sayantanbanerjee.todolist", Context.MODE_PRIVATE);
-        firstTime = sharedPreferences.getString("firstTime","");
-        if(firstTime.equals("")){
-            sharedPreferences.edit().putString("firstTime", "all").apply();
-        }
-
-        Log.i("onCreate(): firstTime",firstTime);
 
         view = (View) findViewById(R.id.empty_view);
         listView = (ListView) findViewById(R.id.list);
@@ -127,22 +124,10 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onResume() {
         super.onResume();
         mCursorAdapter.swapCursor(null);
-
-        Log.i("onResume(): firstTime",firstTime);
-        if(firstTime.equals("all")){
-            Log.i("onResume()", "INSIDE IF");
-            getSupportActionBar().setTitle("Your's All To-Do");
-            today = false;
-            textEmptySubtitle.setText("Get started by Adding a To-Do");
-            sharedPreferences.edit().putString("firstTime", "all").apply();
-            getSupportLoaderManager().initLoader(TODO_LOADER_ALL, null, this);
-        }else{
-            getSupportActionBar().setTitle("Today's To-Do");
-            today = true;
-            sharedPreferences.edit().putString("firstTime", "today").apply();
-            textEmptySubtitle.setText("Add a To-Do of current date (Today) to get Visible here");
-            getSupportLoaderManager().initLoader(TODO_LOADER_TODAY, null, this);
-        }
+        getSupportActionBar().setTitle("Your's All To-Do");
+        today = false;
+        textEmptySubtitle.setText("Get started by Adding a To-Do");
+        getSupportLoaderManager().initLoader(TODO_LOADER_ALL, null, this);
     }
 
     @Override
@@ -162,7 +147,6 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.todayToDo:
                 getSupportActionBar().setTitle("Today's To-Do");
                 mCursorAdapter.swapCursor(null);
-                sharedPreferences.edit().putString("firstTime", "today").apply();
                 today = true;
                 textEmptySubtitle.setText("Add a To-Do of current date (Today) to get Visible here");
                 getSupportLoaderManager().initLoader(TODO_LOADER_TODAY, null, this);
@@ -171,7 +155,6 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.allToDo:
                 getSupportActionBar().setTitle("Your's All To-Do");
                 mCursorAdapter.swapCursor(null);
-                sharedPreferences.edit().putString("firstTime", "all").apply();
                 today = false;
                 textEmptySubtitle.setText("Get started by Adding a To-Do");
                 getSupportLoaderManager().initLoader(TODO_LOADER_ALL, null, this);
@@ -212,8 +195,8 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
                 SimpleDateFormat dateFormatter = new SimpleDateFormat("dd / MM / YYYY");
                 String current_date_string = dateFormatter.format(dateObject);
                 String selection = ToDoContract.ToDoEntry.COLUMN_DATE + " =? ";
-                String[] selectionArgs = new String[]{ current_date_string };
-                Log.i("Current date",current_date_string);
+                String[] selectionArgs = new String[]{current_date_string};
+                Log.i("Current date", current_date_string);
                 return new CursorLoader(this, ToDoContract.ToDoEntry.CONTENT_URI, projection, selection, selectionArgs, null);
             default:
                 return null;
@@ -223,6 +206,7 @@ public class ListActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
         mCursorAdapter.swapCursor(data);
     }
 

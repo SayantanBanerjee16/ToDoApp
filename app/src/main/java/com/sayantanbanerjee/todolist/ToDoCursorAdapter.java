@@ -109,7 +109,7 @@ public class ToDoCursorAdapter extends CursorAdapter {
                 int HOUR_CURRENT_TEMP = Integer.parseInt(HOUR_CURRENT_string);
 
                 if (current_time_string.length() == 10) {
-                    if (current_time_string.charAt(8) == 'a' && current_time_string.charAt(8) == 'm') {
+                    if (current_time_string.charAt(8) == 'a' && current_time_string.charAt(9) == 'm') {
                         if (HOUR_CURRENT_TEMP == 12) {
                             HOUR_CURRENT = 0;
                         } else {
@@ -142,7 +142,7 @@ public class ToDoCursorAdapter extends CursorAdapter {
                 int HOUR_COMPARE_TEMP = Integer.parseInt(hour_string);
 
                 if (time.length() == 10) {
-                    if (time.charAt(8) == 'A' && time.charAt(8) == 'M') {
+                    if (time.charAt(8) == 'A' && time.charAt(9) == 'M') {
                         if (HOUR_COMPARE_TEMP == 12) {
                             HOUR_COMPARE = 0;
                         } else {

@@ -109,7 +109,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
         int HOUR_CURRENT_TEMP = Integer.parseInt(HOUR_CURRENT_string);
 
         if (current_time_string.length() == 10) {
-            if (current_time_string.charAt(8) == 'a' && current_time_string.charAt(8) == 'm') {
+            if (current_time_string.charAt(8) == 'a' && current_time_string.charAt(9) == 'm') {
                 if (HOUR_CURRENT_TEMP == 12) {
                     HOUR_CURRENT = 0;
                 } else {
@@ -155,6 +155,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
                 }
             }
         }
+
     }
 
     private void showUnsavedChangesDialog() {
@@ -589,7 +590,7 @@ public class EditActivity extends AppCompatActivity implements TimePickerDialog.
             int HOUR_TEMP = Integer.parseInt(hour_string);
 
             if (time_string.length() == 10) {
-                if (time_string.charAt(8) == 'A' && time_string.charAt(8) == 'M') {
+                if (time_string.charAt(8) == 'A' && time_string.charAt(9) == 'M') {
                     if (HOUR_TEMP == 12) {
                         HOUR = 0;
                     } else {

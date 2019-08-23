@@ -1,6 +1,8 @@
 To Do List:-
 
-This simple Android App allows the user to store To Do's at a specific day and time and notification is shown to the user at that particualar date.
+This Android App allows the user to store To Do's at a specific day and time and notification is shown to the user at that particular date.
+
+Concept Used - SQLite Database, Notification Manager, Alarm Receiver
 
 This app use SQLite Database for storing data.
 It also allows users to set or disable notification for a particular ToDo.
